@@ -1,0 +1,37 @@
+.checkout-page {
+  padding: 24px 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+.checkout-form-card {
+  background-color: var(--surface-card, #fff);
+  border: 1px solid var(--border-default, #e2e8f0);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.checkout-form-card .form-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-primary, #0f172a);
+}
+
+@media (max-width: 900px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .checkout-page {
+    padding: 16px;
+  }
+}
