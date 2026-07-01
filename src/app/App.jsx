@@ -1,10 +1,7 @@
-import Providers from './providers.jsx';
-import AppRoutes from './routes.jsx';
+import AppRoutes from "./routes";
 
-export default function App() {
-  return (
-    <Providers>
-      <AppRoutes />
-    </Providers>
-  );
+function App() {
+  return <AppRoutes />;
 }
+
+export default App;
