@@ -1,0 +1,1 @@
+//thus hook is for auth information usage
