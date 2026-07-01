@@ -739,6 +739,623 @@
       "name": "Anurag",
       "email": "anurag@gmail.com",
       "password": "2222"
+    },{
+      "id": 2,
+      "name": "Ayon",
+      "email":"ayonkr.saha3660@gmail.com",
+      "password": "1234"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "product_id": 1,
+      "product_name": "Park Avenue",
+      "unit_price": 7252.0,
+      "colour": "WHITE",
+      "brand": "Allen Solly",
+      "size": "S",
+      "rating": 4
+    },
+    {
+      "id": 2,
+      "product_id": 2,
+      "product_name": "Louis Philippe",
+      "unit_price": 3901.0,
+      "colour": "YELLOW",
+      "brand": "Global Desi",
+      "size": "S",
+      "rating": 4
+    },
+    {
+      "id": 3,
+      "product_id": 3,
+      "product_name": "Van Heusen",
+      "unit_price": 1993.0,
+      "colour": "GREEN",
+      "brand": "Anavila",
+      "size": "XL",
+      "rating": 4
+    },
+    {
+      "id": 4,
+      "product_id": 4,
+      "product_name": "BlackBerrys",
+      "unit_price": 7814.0,
+      "colour": "WHITE",
+      "brand": "Biba",
+      "size": "M",
+      "rating": 3
+    },
+    {
+      "id": 5,
+      "product_id": 5,
+      "product_name": "Giovani",
+      "unit_price": 8161.0,
+      "colour": "BLACK",
+      "brand": "Manyavar",
+      "size": "XXL",
+      "rating": 4
+    },
+    {
+      "id": 6,
+      "product_id": 6,
+      "product_name": "Arrow",
+      "unit_price": 6617.0,
+      "colour": "WHITE",
+      "brand": "Biba",
+      "size": "XXL",
+      "rating": 5
+    },
+    {
+      "id": 7,
+      "product_id": 7,
+      "product_name": "Raymond",
+      "unit_price": 2257.0,
+      "colour": "GREEN",
+      "brand": "Manyavar",
+      "size": "S",
+      "rating": 3
+    },
+    {
+      "id": 8,
+      "product_id": 8,
+      "product_name": "Indian Terrain",
+      "unit_price": 3675.0,
+      "colour": "BROWN",
+      "brand": "Zara",
+      "size": "XL",
+      "rating": 4
+    },
+    {
+      "id": 9,
+      "product_id": 9,
+      "product_name": "Globus",
+      "unit_price": 3674.0,
+      "colour": "BROWN",
+      "brand": "H & M",
+      "size": "XL",
+      "rating": 5
+    },
+    {
+      "id": 10,
+      "product_id": 10,
+      "product_name": "Allen Solly",
+      "unit_price": 4103.0,
+      "colour": "BROWN",
+      "brand": "Global Desi",
+      "size": "S",
+      "rating": 5
+    },
+    {
+      "id": 11,
+      "product_id": 11,
+      "product_name": "U.S. Polo ASSN",
+      "unit_price": 2657.0,
+      "colour": "VOILET",
+      "brand": "Global Desi",
+      "size": "S",
+      "rating": 3
+    },
+    {
+      "id": 12,
+      "product_id": 12,
+      "product_name": "LP Jeans",
+      "unit_price": 2093.0,
+      "colour": "BLACK",
+      "brand": "H & M",
+      "size": "M",
+      "rating": 3
+    },
+    {
+      "id": 13,
+      "product_id": 13,
+      "product_name": "Indigo Nation",
+      "unit_price": 3747.0,
+      "colour": "VOILET",
+      "brand": "Biba",
+      "size": "XL",
+      "rating": 4
+    },
+    {
+      "id": 14,
+      "product_id": 14,
+      "product_name": "Indian Terrain",
+      "unit_price": 2675.0,
+      "colour": "RED",
+      "brand": "Global Desi",
+      "size": "XL",
+      "rating": 3
+    },
+    {
+      "id": 15,
+      "product_id": 15,
+      "product_name": "Celio",
+      "unit_price": 6375.0,
+      "colour": "GREEN",
+      "brand": "Allen Solly",
+      "size": "M",
+      "rating": 5
+    },
+    {
+      "id": 16,
+      "product_id": 16,
+      "product_name": "Color plus",
+      "unit_price": 8443.0,
+      "colour": "BROWN",
+      "brand": "H & M",
+      "size": "S",
+      "rating": 4
+    },
+    {
+      "id": 17,
+      "product_id": 17,
+      "product_name": "Parx",
+      "unit_price": 6456.0,
+      "colour": "PINK",
+      "brand": "H & M",
+      "size": "XXL",
+      "rating": 3
+    },
+    {
+      "id": 18,
+      "product_id": 18,
+      "product_name": "Arrow",
+      "unit_price": 6450.0,
+      "colour": "RED",
+      "brand": "H & M",
+      "size": "XL",
+      "rating": 5
+    },
+    {
+      "id": 19,
+      "product_id": 19,
+      "product_name": "Lombard",
+      "unit_price": 4800.0,
+      "colour": "GREEN",
+      "brand": "Allen Solly",
+      "size": "XXL",
+      "rating": 5
+    },
+    {
+      "id": 20,
+      "product_id": 20,
+      "product_name": "Twill",
+      "unit_price": 1260.0,
+      "colour": "RED",
+      "brand": "Manyavar",
+      "size": "XL",
+      "rating": 3
+    },
+    {
+      "id": 21,
+      "product_id": 21,
+      "product_name": "John Miller",
+      "unit_price": 7357.0,
+      "colour": "GREEN",
+      "brand": "Allen Solly",
+      "size": "XXL",
+      "rating": 3
+    },
+    {
+      "id": 22,
+      "product_id": 22,
+      "product_name": "Bare Denim",
+      "unit_price": 3913.0,
+      "colour": "BLACK",
+      "brand": "Global Desi",
+      "size": "S",
+      "rating": 4
+    },
+    {
+      "id": 23,
+      "product_id": 23,
+      "product_name": "John Players",
+      "unit_price": 4594.0,
+      "colour": "YELLOW",
+      "brand": "Manyavar",
+      "size": "S",
+      "rating": 3
+    },
+    {
+      "id": 24,
+      "product_id": 24,
+      "product_name": "Izod",
+      "unit_price": 5367.0,
+      "colour": "YELLOW",
+      "brand": "Global Desi",
+      "size": "XXL",
+      "rating": 5
+    },
+    {
+      "id": 25,
+      "product_id": 25,
+      "product_name": "Basics",
+      "unit_price": 1808.0,
+      "colour": "BLACK",
+      "brand": "Manyavar",
+      "size": "S",
+      "rating": 4
+    },
+    {
+      "id": 26,
+      "product_id": 26,
+      "product_name": "Global desi",
+      "unit_price": 1146.0,
+      "colour": "BROWN",
+      "brand": "H & M",
+      "size": "S",
+      "rating": 4
+    },
+    {
+      "id": 27,
+      "product_id": 27,
+      "product_name": "Mother earth",
+      "unit_price": 7758.0,
+      "colour": "BROWN",
+      "brand": "Biba",
+      "size": "M",
+      "rating": 4
+    },
+    {
+      "id": 28,
+      "product_id": 28,
+      "product_name": "Biba",
+      "unit_price": 6381.0,
+      "colour": "WHITE",
+      "brand": "H & M",
+      "size": "M",
+      "rating": 5
+    },
+    {
+      "id": 29,
+      "product_id": 29,
+      "product_name": "Soch",
+      "unit_price": 7702.0,
+      "colour": "GREEN",
+      "brand": "Manyavar",
+      "size": "XXL",
+      "rating": 5
+    },
+    {
+      "id": 30,
+      "product_id": 30,
+      "product_name": "Aurelia",
+      "unit_price": 5555.0,
+      "colour": "RED",
+      "brand": "Allen Solly",
+      "size": "S",
+      "rating": 3
+    },
+    {
+      "id": 31,
+      "product_id": 31,
+      "product_name": "W",
+      "unit_price": 7887.0,
+      "colour": "WHITE",
+      "brand": "H & M",
+      "size": "XL",
+      "rating": 3
+    },
+    {
+      "id": 32,
+      "product_id": 32,
+      "product_name": "Label Ritu Kumar",
+      "unit_price": 3807.0,
+      "colour": "WHITE",
+      "brand": "Zara",
+      "size": "M",
+      "rating": 3
+    },
+    {
+      "id": 33,
+      "product_id": 33,
+      "product_name": "AND",
+      "unit_price": 4488.0,
+      "colour": "VOILET",
+      "brand": "The Label - Ritu Kumar",
+      "size": "XXL",
+      "rating": 4
+    },
+    {
+      "id": 34,
+      "product_id": 34,
+      "product_name": "Libas",
+      "unit_price": 7391.0,
+      "colour": "BROWN",
+      "brand": "Zara",
+      "size": "M",
+      "rating": 4
+    },
+    {
+      "id": 35,
+      "product_id": 35,
+      "product_name": "UCB",
+      "unit_price": 1896.0,
+      "colour": "BROWN",
+      "brand": "Allen Solly",
+      "size": "XL",
+      "rating": 3
+    },
+    {
+      "id": 36,
+      "product_id": 36,
+      "product_name": "Zink London",
+      "unit_price": 2613.0,
+      "colour": "WHITE",
+      "brand": "Allen Solly",
+      "size": "XXL",
+      "rating": 5
+    },
+    {
+      "id": 37,
+      "product_id": 37,
+      "product_name": "Madame",
+      "unit_price": 8297.0,
+      "colour": "GREEN",
+      "brand": "Biba",
+      "size": "M",
+      "rating": 3
+    },
+    {
+      "id": 38,
+      "product_id": 38,
+      "product_name": "Marie Clarie",
+      "unit_price": 6794.0,
+      "colour": "YELLOW",
+      "brand": "Global Desi",
+      "size": "XL",
+      "rating": 4
+    },
+    {
+      "id": 39,
+      "product_id": 39,
+      "product_name": "Vero Moda",
+      "unit_price": 2882.0,
+      "colour": "BROWN",
+      "brand": "Zara",
+      "size": "M",
+      "rating": 3
+    },
+    {
+      "id": 40,
+      "product_id": 40,
+      "product_name": "Only",
+      "unit_price": 2632.0,
+      "colour": "RED",
+      "brand": "The Label - Ritu Kumar",
+      "size": "XL",
+      "rating": 3
+    },
+    {
+      "id": 41,
+      "product_id": 41,
+      "product_name": "Pepe Jeans",
+      "unit_price": 6156.0,
+      "colour": "VOILET",
+      "brand": "H & M",
+      "size": "XL",
+      "rating": 4
+    },
+    {
+      "id": 42,
+      "product_id": 42,
+      "product_name": "Levi?s",
+      "unit_price": 3919.0,
+      "colour": "YELLOW",
+      "brand": "The Label - Ritu Kumar",
+      "size": "M",
+      "rating": 3
+    },
+    {
+      "id": 43,
+      "product_id": 43,
+      "product_name": "Jeans,",
+      "unit_price": 3836.0,
+      "colour": "WHITE",
+      "brand": "Global Desi",
+      "size": "M",
+      "rating": 3
+    },
+    {
+      "id": 44,
+      "product_id": 44,
+      "product_name": "Trousers,",
+      "unit_price": 1681.0,
+      "colour": "BLACK",
+      "brand": "H & M",
+      "size": "XL",
+      "rating": 4
+    },
+    {
+      "id": 45,
+      "product_id": 45,
+      "product_name": "Shorts,",
+      "unit_price": 4870.0,
+      "colour": "BROWN",
+      "brand": "Global Desi",
+      "size": "XL",
+      "rating": 3
+    },
+    {
+      "id": 46,
+      "product_id": 46,
+      "product_name": "Shirts,",
+      "unit_price": 8623.0,
+      "colour": "GREEN",
+      "brand": "H & M",
+      "size": "XL",
+      "rating": 4
+    },
+    {
+      "id": 47,
+      "product_id": 47,
+      "product_name": "Jackets,",
+      "unit_price": 4416.0,
+      "colour": "BROWN",
+      "brand": "H & M",
+      "size": "M",
+      "rating": 4
+    },
+    {
+      "id": 48,
+      "product_id": 48,
+      "product_name": "Sweaters,",
+      "unit_price": 8042.0,
+      "colour": "PINK",
+      "brand": "Manyavar",
+      "size": "S",
+      "rating": 4
+    },
+    {
+      "id": 49,
+      "product_id": 49,
+      "product_name": "Sweatshirts,",
+      "unit_price": 2421.0,
+      "colour": "PINK",
+      "brand": "Zara",
+      "size": "XL",
+      "rating": 4
+    },
+    {
+      "id": 50,
+      "product_id": 50,
+      "product_name": "T-shirts,",
+      "unit_price": 6556.0,
+      "colour": "YELLOW",
+      "brand": "Global Desi",
+      "size": "M",
+      "rating": 5
+    },
+    {
+      "id": 51,
+      "product_id": 51,
+      "product_name": "Underwear,",
+      "unit_price": 8071.0,
+      "colour": "WHITE",
+      "brand": "H & M",
+      "size": "S",
+      "rating": 3
+    },
+    {
+      "id": 52,
+      "product_id": 52,
+      "product_name": "Socks,",
+      "unit_price": 6550.0,
+      "colour": "VOILET",
+      "brand": "H & M",
+      "size": "XXL",
+      "rating": 3
+    },
+    {
+      "id": 53,
+      "product_id": 53,
+      "product_name": "Accessories,",
+      "unit_price": 1668.0,
+      "colour": "GREEN",
+      "brand": "Biba",
+      "size": "XL",
+      "rating": 3
+    },
+    {
+      "id": 54,
+      "product_id": 54,
+      "product_name": "Shoes,",
+      "unit_price": 4494.0,
+      "colour": "GREEN",
+      "brand": "Zara",
+      "size": "S",
+      "rating": 4
+    },
+    {
+      "id": 55,
+      "product_id": 55,
+      "product_name": "Dresses,",
+      "unit_price": 7083.0,
+      "colour": "RED",
+      "brand": "Anavila",
+      "size": "M",
+      "rating": 5
+    },
+    {
+      "id": 56,
+      "product_id": 56,
+      "product_name": "Belts,",
+      "unit_price": 7389.0,
+      "colour": "YELLOW",
+      "brand": "Allen Solly",
+      "size": "XL",
+      "rating": 5
+    },
+    {
+      "id": 57,
+      "product_id": 57,
+      "product_name": "Overalls,",
+      "unit_price": 7678.0,
+      "colour": "RED",
+      "brand": "Zara",
+      "size": "M",
+      "rating": 3
+    },
+    {
+      "id": 58,
+      "product_id": 58,
+      "product_name": "Jumpsuits, and",
+      "unit_price": 4673.0,
+      "colour": "BROWN",
+      "brand": "Global Desi",
+      "size": "XXL",
+      "rating": 5
+    },
+    {
+      "id": 59,
+      "product_id": 59,
+      "product_name": "Track-suit",
+      "unit_price": 6841.0,
+      "colour": "GREEN",
+      "brand": "Zara",
+      "size": "XXL",
+      "rating": 3
+    },
+    {
+      "id": 60,
+      "product_id": 60,
+      "product_name": "Windcheaters/anorak",
+      "unit_price": 3986.0,
+      "colour": "RED",
+      "brand": "H & M",
+      "size": "XXL",
+      "rating": 3
+    },
+    {
+      "id": 61,
+      "product_id": 61,
+      "product_name": "Jerkin for men & women.",
+      "unit_price": 2091.0,
+      "colour": "GREEN",
+      "brand": "H & M",
+      "size": "S",
+      "rating": 3
     }
   ]
 }
