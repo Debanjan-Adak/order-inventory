@@ -1,1 +1,10 @@
-{}
+{
+  "users": [],
+  "customers": [],
+  "products": [],
+  "categories": [],
+  "inventory": [],
+  "orders": [],
+  "order_items": [],
+  "shipments": []
+}
