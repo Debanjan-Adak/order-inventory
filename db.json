@@ -322,5 +322,423 @@
       "logo_charset": null,
       "logo_last_updated": null
     }
+  ],
+  "shipments": [
+    {
+      "shipment_id": 1,
+      "store_id": 1,
+      "customer_id": 45,
+      "delivery_address": "Jobstown, NJ 08041 USA",
+      "shipment_status": "DELIVERED",
+      "id": 1
+    },
+    {
+      "shipment_id": 99,
+      "store_id": 1,
+      "customer_id": 161,
+      "delivery_address": "Tyler, AL 36785 USA",
+      "shipment_status": "DELIVERED",
+      "id": 99
+    },
+    {
+      "shipment_id": 105,
+      "store_id": 1,
+      "customer_id": 86,
+      "delivery_address": "Anita, PA 15711 USA",
+      "shipment_status": "DELIVERED",
+      "id": 105
+    },
+    {
+      "shipment_id": 125,
+      "store_id": 1,
+      "customer_id": 44,
+      "delivery_address": "Belle Mead, NJ 08502 USA",
+      "shipment_status": "DELIVERED",
+      "id": 125
+    },
+    {
+      "shipment_id": 131,
+      "store_id": 1,
+      "customer_id": 115,
+      "delivery_address": "Newfoundland, PA 18445 USA",
+      "shipment_status": "DELIVERED",
+      "id": 131
+    },
+    {
+      "shipment_id": 265,
+      "store_id": 1,
+      "customer_id": 172,
+      "delivery_address": "Ludlow Falls, OH 45339 USA",
+      "shipment_status": "DELIVERED",
+      "id": 265
+    },
+    {
+      "shipment_id": 286,
+      "store_id": 1,
+      "customer_id": 315,
+      "delivery_address": "Beltsville, MD 20705 USA",
+      "shipment_status": "DELIVERED",
+      "id": 286
+    },
+    {
+      "shipment_id": 478,
+      "store_id": 1,
+      "customer_id": 268,
+      "delivery_address": "Mayfield, MI 49666 USA",
+      "shipment_status": "DELIVERED",
+      "id": 478
+    },
+    {
+      "shipment_id": 483,
+      "store_id": 1,
+      "customer_id": 392,
+      "delivery_address": "East Bernard, TX 77435 USA",
+      "shipment_status": "DELIVERED",
+      "id": 483
+    },
+    {
+      "shipment_id": 632,
+      "store_id": 1,
+      "customer_id": 145,
+      "delivery_address": "Fort Lauderdale, FL 33334 USA",
+      "shipment_status": "DELIVERED",
+      "id": 632
+    },
+    {
+      "shipment_id": 862,
+      "store_id": 1,
+      "customer_id": 384,
+      "delivery_address": "Houston, TX 77063 USA",
+      "shipment_status": "DELIVERED",
+      "id": 862
+    },
+    {
+      "shipment_id": 911,
+      "store_id": 1,
+      "customer_id": 172,
+      "delivery_address": "Ludlow Falls, OH 45339 USA",
+      "shipment_status": "DELIVERED",
+      "id": 911
+    },
+    {
+      "shipment_id": 1213,
+      "store_id": 1,
+      "customer_id": 118,
+      "delivery_address": "Roaring Branch, PA 17765 USA",
+      "shipment_status": "DELIVERED",
+      "id": 1213
+    },
+    {
+      "shipment_id": 1232,
+      "store_id": 1,
+      "customer_id": 240,
+      "delivery_address": "Beaverdam, OH 45808 USA",
+      "shipment_status": "DELIVERED",
+      "id": 1232
+    },
+    {
+      "shipment_id": 1255,
+      "store_id": 1,
+      "customer_id": 33,
+      "delivery_address": "Essex, CT 06426 USA",
+      "shipment_status": "DELIVERED",
+      "id": 1255
+    },
+    {
+      "shipment_id": 1268,
+      "store_id": 1,
+      "customer_id": 244,
+      "delivery_address": "Brandon, MS 39047 USA",
+      "shipment_status": "DELIVERED",
+      "id": 1268
+    },
+    {
+      "shipment_id": 1275,
+      "store_id": 1,
+      "customer_id": 173,
+      "delivery_address": "Oxford, MS 38655 USA",
+      "shipment_status": "DELIVERED",
+      "id": 1275
+    },
+    {
+      "shipment_id": 1370,
+      "store_id": 1,
+      "customer_id": 251,
+      "delivery_address": "Thelma, KY 41260 USA",
+      "shipment_status": "DELIVERED",
+      "id": 1370
+    },
+    {
+      "shipment_id": 1378,
+      "store_id": 1,
+      "customer_id": 314,
+      "delivery_address": "Luttrell, TN 37779 USA",
+      "shipment_status": "DELIVERED",
+      "id": 1378
+    },
+    {
+      "shipment_id": 1624,
+      "store_id": 1,
+      "customer_id": 351,
+      "delivery_address": "Montgomeryville, PA 18936 USA",
+      "shipment_status": "SHIPPED",
+      "id": 1624
+    },
+    {
+      "shipment_id": 1811,
+      "store_id": 1,
+      "customer_id": 385,
+      "delivery_address": "Pueblo, CO 81001 USA",
+      "shipment_status": "DELIVERED",
+      "id": 1811
+    },
+    {
+      "shipment_id": 1848,
+      "store_id": 1,
+      "customer_id": 347,
+      "delivery_address": "Shell Rock, IA 50670 USA",
+      "shipment_status": "CREATED",
+      "id": 1848
+    },
+    {
+      "shipment_id": 1885,
+      "store_id": 1,
+      "customer_id": 301,
+      "delivery_address": "Medora, IN 47260 USA",
+      "shipment_status": "DELIVERED",
+      "id": 1885
+    },
+    {
+      "shipment_id": 1928,
+      "store_id": 1,
+      "customer_id": 257,
+      "delivery_address": "Neon, KY 41840 USA",
+      "shipment_status": "IN-TRANSIT",
+      "id": 1928
+    },
+    {
+      "shipment_id": 1930,
+      "store_id": 1,
+      "customer_id": 140,
+      "delivery_address": "Orlando, FL 32811 USA",
+      "shipment_status": "IN-TRANSIT",
+      "id": 1930
+    },
+    {
+      "shipment_id": 1931,
+      "store_id": 1,
+      "customer_id": 321,
+      "delivery_address": "Baltimore, MD 21223 USA",
+      "shipment_status": "IN-TRANSIT",
+      "id": 1931
+    },
+    {
+      "shipment_id": 1940,
+      "store_id": 1,
+      "customer_id": 180,
+      "delivery_address": "Blue Springs, MS 38828 USA",
+      "shipment_status": "IN-TRANSIT",
+      "id": 1940
+    },
+    {
+      "shipment_id": 1942,
+      "store_id": 1,
+      "customer_id": 362,
+      "delivery_address": "Industry, TX 78944 USA",
+      "shipment_status": "IN-TRANSIT",
+      "id": 1942
+    },
+    {
+      "shipment_id": 1953,
+      "store_id": 1,
+      "customer_id": 239,
+      "delivery_address": "Deadwood, SD 57732 USA",
+      "shipment_status": "IN-TRANSIT",
+      "id": 1953
+    },
+    {
+      "shipment_id": 1954,
+      "store_id": 1,
+      "customer_id": 234,
+      "delivery_address": "Rhodes, IA 50234 USA",
+      "shipment_status": "IN-TRANSIT",
+      "id": 1954
+    },
+    {
+      "shipment_id": 1959,
+      "store_id": 1,
+      "customer_id": 364,
+      "delivery_address": "Jarreau, LA 70749 USA",
+      "shipment_status": "IN-TRANSIT",
+      "id": 1959
+    },
+    {
+      "shipment_id": 1962,
+      "store_id": 1,
+      "customer_id": 346,
+      "delivery_address": "Greensburg, IN 47240 USA",
+      "shipment_status": "IN-TRANSIT",
+      "id": 1962
+    },
+    {
+      "shipment_id": 1985,
+      "store_id": 1,
+      "customer_id": 300,
+      "delivery_address": "Aredale, IA 50605 USA",
+      "shipment_status": "IN-TRANSIT",
+      "id": 1985
+    },
+    {
+      "shipment_id": 1986,
+      "store_id": 1,
+      "customer_id": 386,
+      "delivery_address": "Klondike, TX 75448 USA",
+      "shipment_status": "IN-TRANSIT",
+      "id": 1986
+    },
+    {
+      "shipment_id": 1989,
+      "store_id": 1,
+      "customer_id": 359,
+      "delivery_address": "Littleton, CO 80123 USA",
+      "shipment_status": "IN-TRANSIT",
+      "id": 1989
+    },
+    {
+      "shipment_id": 1992,
+      "store_id": 1,
+      "customer_id": 283,
+      "delivery_address": "Oak Ridge, TN 37830 USA",
+      "shipment_status": "SHIPPED",
+      "id": 1992
+    },
+    {
+      "shipment_id": 1993,
+      "store_id": 1,
+      "customer_id": 283,
+      "delivery_address": "Oak Ridge, TN 37830 USA",
+      "shipment_status": "SHIPPED",
+      "id": 1993
+    },
+    {
+      "shipment_id": 1994,
+      "store_id": 1,
+      "customer_id": 283,
+      "delivery_address": "Oak Ridge, TN 37830 USA",
+      "shipment_status": "SHIPPED",
+      "id": 1994
+    },
+    {
+      "shipment_id": 2000,
+      "store_id": 1,
+      "customer_id": 296,
+      "delivery_address": "Tipton, IA 52772 USA",
+      "shipment_status": "SHIPPED",
+      "id": 2000
+    },
+    {
+      "shipment_id": 2002,
+      "store_id": 1,
+      "customer_id": 267,
+      "delivery_address": "Kingsley, MI 49649 USA",
+      "shipment_status": "SHIPPED",
+      "id": 2002
+    },
+    {
+      "shipment_id": 2003,
+      "store_id": 1,
+      "customer_id": 258,
+      "delivery_address": "Mc Lain, MS 39456 USA",
+      "shipment_status": "SHIPPED",
+      "id": 2003
+    },
+    {
+      "shipment_id": 2008,
+      "store_id": 1,
+      "customer_id": 357,
+      "delivery_address": "Thrall, TX 76578 USA",
+      "shipment_status": "SHIPPED",
+      "id": 2008
+    },
+    {
+      "shipment_id": 2011,
+      "store_id": 1,
+      "customer_id": 375,
+      "delivery_address": "Chebanse, IL 60922 USA",
+      "shipment_status": "SHIPPED",
+      "id": 2011
+    },
+    {
+      "shipment_id": 2014,
+      "store_id": 1,
+      "customer_id": 318,
+      "delivery_address": "Burnett, WI 53922 USA",
+      "shipment_status": "SHIPPED",
+      "id": 2014
+    },
+    {
+      "shipment_id": 2020,
+      "store_id": 1,
+      "customer_id": 339,
+      "delivery_address": "Salix, IA 51052 USA",
+      "shipment_status": "CREATED",
+      "id": 2020
+    },
+    {
+      "shipment_id": 2021,
+      "store_id": 1,
+      "customer_id": 347,
+      "delivery_address": "Shell Rock, IA 50670 USA",
+      "shipment_status": "CREATED",
+      "id": 2021
+    },
+    {
+      "shipment_id": 2022,
+      "store_id": 1,
+      "customer_id": 309,
+      "delivery_address": "Saint Francis, WI 53235 USA",
+      "shipment_status": "CREATED",
+      "id": 2022
+    },
+    {
+      "shipment_id": 2023,
+      "store_id": 1,
+      "customer_id": 309,
+      "delivery_address": "Saint Francis, WI 53235 USA",
+      "shipment_status": "CREATED",
+      "id": 2023
+    },
+    {
+      "shipment_id": 2024,
+      "store_id": 1,
+      "customer_id": 345,
+      "delivery_address": "Loudonville, OH 44842 USA",
+      "shipment_status": "CREATED",
+      "id": 2024
+    },
+    {
+      "shipment_id": 2025,
+      "store_id": 1,
+      "customer_id": 354,
+      "delivery_address": "Stockdale, TX 78160 USA",
+      "shipment_status": "CREATED",
+      "id": 2025
+    },
+    {
+      "shipment_id": 2026,
+      "store_id": 1,
+      "customer_id": 354,
+      "delivery_address": "Stockdale, TX 78160 USA",
+      "shipment_status": "CREATED",
+      "id": 2026
+    }
+  ],
+  "admin": [
+    {
+      "id": 1,
+      "name": "Anurag",
+      "email": "anurag@gmail.com",
+      "password": "2222"
+    }
   ]
 }
