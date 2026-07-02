@@ -50,7 +50,7 @@ function RecentOrders() {
                   <tr key={order.order_id}>
                     <td>
                       <Link
-                        to={`/admin/orders/${order.order_id}`}
+                        to={`/admin/orders/${order.id}`}
                         className="text-decoration-none"
                         style={{ color: "var(--brand-accent)" }}
                       >
