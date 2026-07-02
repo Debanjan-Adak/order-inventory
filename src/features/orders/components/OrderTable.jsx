@@ -35,9 +35,16 @@ export const OrderTable = ({ orders = [], isLoading, theme = "light", onView, on
       
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-          <h5 className="fw-bold mb-0">System Order Ledger</h5>
-          <small className="text-muted">Monitor and inspect historical warehouse logistics dispatches</small>
+          <h5 className="fw-bold mb-0">
+            {onDelete ? "System Order Ledger" : "My Order Ledger"}</h5>
+
+          <small className="text-muted">
+            {onDelete ? "Monitor and inspect historical warehouse logistics dispatches" :
+            "Monitor and track your placed warehouse orders"}
+          </small>
+
         </div>
+
         <div className="d-flex gap-2">
           <input type="text" className="form-control form-control-sm bg-transparent text-reset" 
             placeholder="Search Reference..." 
@@ -48,7 +55,7 @@ export const OrderTable = ({ orders = [], isLoading, theme = "light", onView, on
           <select className="form-select form-select-sm bg-transparent text-reset" 
           value={status} 
             onChange={e => { setStatus(e.target.value); setCurrentPage(1); }}>
-            <option value="ALL">All Profiles</option>
+            <option value="ALL">All Statuses</option>
             <option value="COMPLETE">Complete</option>
             <option value="CANCELLED">Cancelled</option>
             <option value="PENDING">Pending</option>
@@ -59,6 +66,7 @@ export const OrderTable = ({ orders = [], isLoading, theme = "light", onView, on
       <div className="table-responsive">
         <table className={`table align-middle ${theme === "dark" ? "table-dark" : ""}`}>
           <thead>
+
             <tr className="text-uppercase tracking-wider" style={{ fontSize: "0.75rem" }}>
               <th>Order ID</th>
               <th>Timestamp</th>
@@ -67,7 +75,9 @@ export const OrderTable = ({ orders = [], isLoading, theme = "light", onView, on
               <th>Status State</th>
               <th className="text-end">Actions</th>
             </tr>
+
           </thead>
+
           <tbody>
             {isLoading ? (
               Array.from({ length: itemsPerPage }).map((_, i) => (
@@ -76,12 +86,15 @@ export const OrderTable = ({ orders = [], isLoading, theme = "light", onView, on
                   <td key={j}><div className="shimmer w-75"></div></td>)}
                 </tr>
               ))
+
             ) : paginated.length > 0 ? (
               paginated.map(order => (
 
                 <tr key={order.id}>
-                  <td className="font-monospace fw-bold text-indigo" style={{ color: "#4F46E5" }}>#{order.order_id}</td>
-                  <td className="text-muted" style={{ fontSize: "0.85rem" }}>{order.order_tms}</td>
+                  <td className="font-monospace fw-bold text-indigo" 
+                    style={{ color: "#4F46E5" }}>#{order.order_id}</td>
+                  <td className="text-muted" 
+                    style={{ fontSize: "0.85rem" }}>{order.order_tms}</td>
                   <td>Node #{order.customer_id}</td>
                   <td>Store #{order.store_id}</td>
                   <td>
@@ -99,16 +112,18 @@ export const OrderTable = ({ orders = [], isLoading, theme = "light", onView, on
                       onClick={() => onView(order.id)}>
                         Details
                       </button>
-                      {order.order_status !== "CANCELLED" && order.order_status !== "COMPLETE" && (
+                      {onCancel && order.order_status !== "CANCELLED" && order.order_status !== "COMPLETE" && (
                         <button className="btn btn-sm btn-outline-warning btn-interact" 
                         onClick={() => onCancel(order.id)}>
                             Cancel
                         </button>
                       )}
-                      <button className="btn btn-sm btn-outline-danger btn-interact" 
-                      onClick={() => onDelete(order.id)}>
-                        Delete
-                      </button>
+                      {onDelete && (
+                        <button className="btn btn-sm btn-outline-danger btn-interact" 
+                        onClick={() => onDelete(order.id)}>
+                          Delete
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
