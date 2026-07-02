@@ -1,16 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
 import { Mail, Lock, Eye, EyeOff, LoaderCircle, CircleAlert, ShieldCheck } from 'lucide-react';
 import AuthCard from './AuthCard';
 import useAuth from '../hooks/useAuth';
 import useAuthStore from '../store/authStore';
-
-const adminLoginSchema = Yup.object({
-  email: Yup.string().email('Enter a valid email address.').required('This field is required.'),
-  password: Yup.string().required('This field is required.')
-});
+import loginSchema from '../validation/loginSchema';
 
 const AdminLoginForm = () => {
   const navigate = useNavigate();
@@ -49,7 +44,7 @@ const AdminLoginForm = () => {
 
       <Formik
         initialValues={{ email: '', password: '' }}
-        validationSchema={adminLoginSchema}
+        validationSchema={loginSchema}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (

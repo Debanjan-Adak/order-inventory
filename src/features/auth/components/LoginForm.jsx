@@ -1,16 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
 import { Mail, Lock, Eye, EyeOff, LoaderCircle, CircleAlert } from 'lucide-react';
 import AuthCard from './AuthCard';
 import useAuth from '../hooks/useAuth';
 import useAuthStore from '../store/authStore';
-
-const loginSchema = Yup.object({
-  email: Yup.string().email('Enter a valid email address.').required('This field is required.'),
-  password: Yup.string().required('This field is required.')
-});
+import loginSchema from '../validation/loginSchema';
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -53,7 +48,7 @@ const LoginForm = () => {
         {({ isSubmitting }) => (
           <Form className="flex flex-col gap-5" noValidate>
             {formError ? (
-              <div className="flex items-center gap-2 rounded-md border border-[var(--status-cancelled)]/30 bg-[var(--status-cancelled)]/10 px-3 py-2 text-sm text-[var(--status-cancelled)]">
+              <div className="flex items-center gap-2 rounded-xl border border-[var(--status-cancelled)]/30 bg-[var(--status-cancelled)]/10 px-3.5 py-2.5 text-sm text-[var(--status-cancelled)]">
                 <CircleAlert size={16} strokeWidth={1.75} />
                 <span>{formError}</span>
               </div>
@@ -74,7 +69,7 @@ const LoginForm = () => {
                   name="email"
                   type="email"
                   placeholder="you@company.com"
-                  className="w-full rounded-md border border-[var(--border-default)] bg-[var(--surface-base)] py-2.5 pl-9 pr-3 text-sm text-[var(--text-primary)] outline-none transition-shadow duration-100 focus:border-[var(--brand-accent)] focus:ring-2 focus:ring-[var(--brand-accent)]/30"
+                  className="w-full rounded-xl border border-[var(--border-default)] bg-[var(--surface-card)] py-3 pl-9 pr-3 text-sm text-[var(--text-primary)] shadow-sm outline-none transition-all duration-150 placeholder:text-[var(--text-muted)]/70 hover:border-[var(--text-muted)]/60 focus:border-[var(--brand-accent)] focus:shadow-md focus:ring-4 focus:ring-[var(--brand-accent)]/15"
                 />
               </div>
               <ErrorMessage name="email" component="p" className="text-xs text-[var(--status-cancelled)]" />
@@ -95,7 +90,7 @@ const LoginForm = () => {
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Enter your password"
-                  className="w-full rounded-md border border-[var(--border-default)] bg-[var(--surface-base)] py-2.5 pl-9 pr-9 text-sm text-[var(--text-primary)] outline-none transition-shadow duration-100 focus:border-[var(--brand-accent)] focus:ring-2 focus:ring-[var(--brand-accent)]/30"
+                  className="w-full rounded-xl border border-[var(--border-default)] bg-[var(--surface-card)] py-3 pl-9 pr-9 text-sm text-[var(--text-primary)] shadow-sm outline-none transition-all duration-150 placeholder:text-[var(--text-muted)]/70 hover:border-[var(--text-muted)]/60 focus:border-[var(--brand-accent)] focus:shadow-md focus:ring-4 focus:ring-[var(--brand-accent)]/15"
                 />
                 <button
                   type="button"
@@ -112,7 +107,7 @@ const LoginForm = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="mt-1 flex h-10 items-center justify-center gap-2 rounded-md bg-[var(--brand-accent)] text-sm font-medium text-white transition-transform duration-100 hover:brightness-[0.92] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-2 flex h-11 items-center justify-center gap-2 rounded-xl bg-[var(--brand-accent)] text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:brightness-[0.94] hover:shadow-md active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isSubmitting ? (
                 <>
