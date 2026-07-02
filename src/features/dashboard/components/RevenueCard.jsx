@@ -1,36 +1,42 @@
 import { useMemo } from "react";
 import { DollarSign } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { useOrders } from "../../orders/hooks/useOrders";
-import { useInventoryOrderDetails } from "../../inventory/hooks/useInventory";
+import axiosClient from "../../../shared/api/axios";
 import { formatCurrency } from "../../../shared/utils/formatCurrency";
 import StatsCard from "./StatsCard";
 
 function RevenueCard() {
   const { data: orders, isLoading: ordersLoading } = useOrders();
 
+  const { data: orderItems, isLoading: itemsLoading } = useQuery({
+    queryKey: ["order_items"],
+    queryFn: async () => {
+      const { data } = await axiosClient.get("/order_items");
+      return data;
+    }
+  });
+
   const completedOrderIds = useMemo(() => {
-    if (!orders) return [];
-    return orders
-      .filter((order) => order.order_status === "COMPLETE")
-      .map((order) => order.order_id);
+    if (!orders) return new Set();
+    return new Set(
+      orders
+        .filter((order) => order.order_status === "COMPLETE" || order.order_status === "complete")
+        .map((order) => order.order_id)
+    );
   }, [orders]);
 
-  const detailQueries = completedOrderIds.map((orderId) =>
-    useInventoryOrderDetails(orderId)
-  );
-
-  const isLoading = ordersLoading || detailQueries.some((q) => q.isLoading);
-
   const total = useMemo(() => {
-    return detailQueries.reduce((sum, query) => {
-      const items = query.data || [];
-      const orderTotal = items.reduce(
-        (lineSum, item) => lineSum + item.unit_price * item.quantity,
-        0
-      );
-      return sum + orderTotal;
+    if (!orderItems || completedOrderIds.size === 0) return 0;
+    return orderItems.reduce((sum, item) => {
+      if (completedOrderIds.has(item.order_id)) {
+        return sum + (Number(item.unit_price) || 0) * (Number(item.quantity) || 0);
+      }
+      return sum;
     }, 0);
-  }, [detailQueries]);
+  }, [orderItems, completedOrderIds]);
+
+  const isLoading = ordersLoading || itemsLoading;
 
   return (
     <StatsCard
