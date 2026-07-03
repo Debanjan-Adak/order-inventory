@@ -752,13 +752,13 @@
       "email": "chandrima@gmail.com",
       "password": "7777"
     },
-        {
+    {
       "id": 4,
       "name": "Indrava",
       "email": "indrava@gmail.com",
       "password": "4444"
     },
-        {
+    {
       "id": 5,
       "name": "Debanjan",
       "email": "debanjan@gmail.com",
@@ -1134,7 +1134,8 @@
       "colour": "GREEN",
       "brand": "Biba",
       "size": "M",
-      "rating": 3
+      "rating": 3,
+      "image": "https://www.biba.in/on/demandware.static/-/Sites-biba-product-catalog/default/dwd5240250/images/aw23/skdasrtd5919eaw23grn_1.jpg"
     },
     {
       "id": 38,
@@ -1144,7 +1145,8 @@
       "colour": "YELLOW",
       "brand": "Global Desi",
       "size": "XL",
-      "rating": 4
+      "rating": 4,
+      "image": "https://www.globaldesi.in/dw/image/v2/BGCX_PRD/on/demandware.static/-/Sites-masterCatalog_GD/default/dw529f2787/images/hires/S23/GD-SS24GM1362PRL-YELLOW-(2).jpg?sw=1400&sh=2100&sm=fit&strip=false"
     },
     {
       "id": 39,
@@ -1154,7 +1156,8 @@
       "colour": "BROWN",
       "brand": "Zara",
       "size": "M",
-      "rating": 3
+      "rating": 3,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGBBcfv8WZoK0MFO--l3zQ6OMpj4N159zi4Rxqdjgw8w&s=10"
     },
     {
       "id": 40,
@@ -1164,7 +1167,8 @@
       "colour": "RED",
       "brand": "The Label - Ritu Kumar",
       "size": "XL",
-      "rating": 3
+      "rating": 3,
+      "image": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcT_NeJ6xPl3xPkWM2C4XCONNcZF91jiFb7y8LjECXu6z2_rj2_DQeDEWa8FIOJW0LIkUHCXTOHMObe-djlI5qK3TmTlbkF73BxHJXbo1hSBnG4Jwkzxdntij94&usqp=CAc"
     },
     {
       "id": 41,
@@ -4515,7 +4519,7 @@
       "isblocked": false
     }
   ],
-    "inventory": [
+  "inventory": [
     {
       "id": 2,
       "inventory_id": 2,

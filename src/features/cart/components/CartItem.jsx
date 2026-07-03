@@ -1,57 +1,82 @@
+import { useState } from "react";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import useCartStore from "../store/cartStore";
+import { useCartStore } from "../store/cartStore";
+import formatCurrency from "@shared/utils/formatCurrency";
 import "./CartItem.css";
 
-function formatCurrency(amount) {
-  return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(amount);
-}
-
-function CartItem({ item }) {
+export function CartItem({ item }) {
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
+  const [isRemoving, setIsRemoving] = useState(false);
 
   const lineTotal = item.unitPrice * item.quantity;
 
+  function handleRemove() {
+    if (isRemoving) return;
+    setIsRemoving(true);
+    setTimeout(() => {
+      removeItem(item.productId);
+    }, 200);
+  }
+
+  function handleDecrement() {
+    if (item.quantity <= 1) {
+      handleRemove();
+      return;
+    }
+    updateQuantity(item.productId, item.quantity - 1);
+  }
+
+  function handleIncrement() {
+    updateQuantity(item.productId, item.quantity + 1);
+  }
+
   return (
-    <div className="cart-item">
+    <div className={`cart-item${isRemoving ? " cart-item--exiting" : ""}`}>
       <span
-        className="cart-item-swatch"
-        style={{ backgroundColor: item.colour || "var(--border-default)" }}
+        className="cart-item__colour-dot"
+        style={{ background: item.colour }}
         aria-hidden="true"
       />
 
-      <div className="cart-item-info">
-        <p className="cart-item-name">{item.name}</p>
-        <p className="cart-item-price">{formatCurrency(item.unitPrice)} each</p>
+      <div className="cart-item__info">
+        <p className="cart-item__name">{item.productName}</p>
+        <p className="cart-item__unit-price">
+          {formatCurrency(item.unitPrice)} each
+        </p>
       </div>
 
-      <div className="cart-item-stepper">
+      <div className="cart-item__stepper">
         <button
           type="button"
-          className="cart-stepper-btn"
+          className="cart-item__step-btn"
+          onClick={handleDecrement}
           aria-label="Decrease quantity"
-          onClick={() => updateQuantity(item.productId, item.quantity - 1)}
         >
           <Minus size={14} strokeWidth={2} />
         </button>
-        <span className="cart-stepper-value">{item.quantity}</span>
+        <span className="cart-item__quantity tabular-nums">
+          {item.quantity}
+        </span>
         <button
           type="button"
-          className="cart-stepper-btn"
+          className="cart-item__step-btn"
+          onClick={handleIncrement}
           aria-label="Increase quantity"
-          onClick={() => updateQuantity(item.productId, item.quantity + 1)}
         >
           <Plus size={14} strokeWidth={2} />
         </button>
       </div>
 
-      <p className="cart-item-total">{formatCurrency(lineTotal)}</p>
+      <p className="cart-item__line-total tabular-nums">
+        {formatCurrency(lineTotal)}
+      </p>
 
       <button
         type="button"
-        className="cart-item-remove"
-        aria-label="Remove from cart"
-        onClick={() => removeItem(item.productId)}
+        className="cart-item__remove"
+        onClick={handleRemove}
+        aria-label="Remove item"
       >
         <Trash2 size={16} strokeWidth={1.75} />
       </button>
