@@ -770,121 +770,133 @@
       "id": 1,
       "product_id": 1,
       "product_name": "Park Avenue",
-      "unit_price": 7252.0,
+      "unit_price": 7252,
       "colour": "WHITE",
       "brand": "Allen Solly",
       "size": "S",
-      "rating": 4
+      "rating": 4,
+      "image": "https://assets.ajio.com/medias/sys_master/root/20231208/eh1U/65733c3bafa4cf41f5bf33c1/-473Wx593H-469555163-white-MODEL.jpg"
     },
     {
       "id": 2,
       "product_id": 2,
       "product_name": "Louis Philippe",
-      "unit_price": 3901.0,
+      "unit_price": 3901,
       "colour": "YELLOW",
       "brand": "Global Desi",
       "size": "S",
-      "rating": 4
+      "rating": 4,
+      "image": "https://imagescdn.louisphilippe.com/img/app/product/8/857849-10094610.jpg"
     },
     {
       "id": 3,
       "product_id": 3,
       "product_name": "Van Heusen",
-      "unit_price": 1993.0,
+      "unit_price": 1993,
       "colour": "GREEN",
       "brand": "Anavila",
       "size": "XL",
-      "rating": 4
+      "rating": 4,
+      "image": "https://imagescdn.vanheusenindia.com/img/app/product/3/39726837-15102172.jpg"
     },
     {
       "id": 4,
       "product_id": 4,
       "product_name": "BlackBerrys",
-      "unit_price": 7814.0,
+      "unit_price": 7814,
       "colour": "WHITE",
       "brand": "Biba",
       "size": "M",
-      "rating": 3
+      "rating": 3,
+      "image": "https://images-magento.shoppersstop.com/pub/media/catalog/product/S26MS015284W1/S26MS015284W1_WHITE/S26MS015284W1_WHITE.jpg"
     },
     {
       "id": 5,
       "product_id": 5,
       "product_name": "Giovani",
-      "unit_price": 8161.0,
+      "unit_price": 8161,
       "colour": "BLACK",
       "brand": "Manyavar",
       "size": "XXL",
-      "rating": 4
+      "rating": 4,
+      "image": "https://assets.myntassets.com/w_200,q_50,,dpr_3,fl_progressive,f_webp/assets/images/2025/NOVEMBER/10/ekD1S8Y0_a7280505a1e2466d8f635375ff923e0e.jpg"
     },
     {
       "id": 6,
       "product_id": 6,
       "product_name": "Arrow",
-      "unit_price": 6617.0,
+      "unit_price": 6617,
       "colour": "WHITE",
       "brand": "Biba",
       "size": "XXL",
-      "rating": 5
+      "rating": 5,
+      "image": "https://images-static.nykaa.com/media/catalog/product/0/c/0c5e214ARNW0340_1.jpg?tr=w-500"
     },
     {
       "id": 7,
       "product_id": 7,
       "product_name": "Raymond",
-      "unit_price": 2257.0,
+      "unit_price": 2257,
       "colour": "GREEN",
       "brand": "Manyavar",
       "size": "S",
-      "rating": 3
+      "rating": 3,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIBqMue8BiMj8syuk8zaW2_rlD7WKbhvLj-W-hymaSgdhYNySQ6PBGVi5e&s=10"
     },
     {
       "id": 8,
       "product_id": 8,
       "product_name": "Indian Terrain",
-      "unit_price": 3675.0,
+      "unit_price": 3675,
       "colour": "BROWN",
       "brand": "Zara",
       "size": "XL",
-      "rating": 4
+      "rating": 4,
+      "image": "https://assets.ajio.com/medias/sys_master/root/20230712/8YPK/64aed783eebac147fc6834ea/-473Wx593H-441881311-brown-MODEL.jpg"
     },
     {
       "id": 9,
       "product_id": 9,
       "product_name": "Globus",
-      "unit_price": 3674.0,
+      "unit_price": 3674,
       "colour": "BROWN",
       "brand": "H & M",
       "size": "XL",
-      "rating": 5
+      "rating": 5,
+      "image": "https://rukminim2.flixcart.com/image/480/640/xif0q/shirt/u/m/s/s-a5wtnscastop7632a-red-globus-original-imahdg59rz6ehz8u.jpeg?q=90"
     },
     {
       "id": 10,
       "product_id": 10,
       "product_name": "Allen Solly",
-      "unit_price": 4103.0,
+      "unit_price": 4103,
       "colour": "BROWN",
       "brand": "Global Desi",
       "size": "S",
-      "rating": 5
+      "rating": 5,
+      "image": "https://img.tatacliq.com/images/i21//437Wx649H/MP000000024712040_437Wx649H_202412131023361.jpeg"
     },
     {
       "id": 11,
       "product_id": 11,
       "product_name": "U.S. Polo ASSN",
-      "unit_price": 2657.0,
+      "unit_price": 2657,
       "colour": "VOILET",
       "brand": "Global Desi",
       "size": "S",
-      "rating": 3
+      "rating": 3,
+      "image": "https://cdn19.nnnow.com/web-images/large/styles/1SVD5LAOOKV/1756117274616/1.jpg"
     },
     {
       "id": 12,
       "product_id": 12,
       "product_name": "LP Jeans",
-      "unit_price": 2093.0,
+      "unit_price": 2093,
       "colour": "BLACK",
       "brand": "H & M",
       "size": "M",
-      "rating": 3
+      "rating": 3,
+      "image": "https://imagescdn.louisphilippe.com/img/app/product/9/945710-12142209.jpg"
     },
     {
       "id": 13,
