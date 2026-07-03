@@ -1,12 +1,11 @@
-function Loader({ message = "Loading..." }) {
-  return (
-    <div className="d-flex flex-column justify-content-center align-items-center py-5">
-      <div className="spinner-border text-primary" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </div>
+import './Loader.css';
+export function Loader({ size = 'md' }) {
+  const sizeClass = size === 'sm' ? 'loader--sm' : 'loader--md';
 
-      <p className="mt-3 text-secondary">{message}</p>
-    </div>
+  return (
+    <span className={`loader ${sizeClass}`} role="status" aria-label="Loading">
+      <span className="loader__spinner" aria-hidden="true" />
+    </span>
   );
 }
 

@@ -1,46 +1,33 @@
 {
-  "name": "order-inventory",
+  "name": "order-inventory-management",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "server": "json-server --watch db.json --port 4100",
+    "start": "concurrently -n SERVER,VITE -c yellow,cyan \"npm:server\" \"npm:dev\"",
     "build": "vite build",
-    "lint": "oxlint",
-    "preview": "vite preview",
-    "server": "json-server --watch db.json --port 4000"
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^2.12.0",
-    "@tailwindcss/vite": "^4.3.2",
-    "@tanstack/react-query": "^5.101.2",
-    "@tanstack/react-query-devtools": "^5.101.2",
-    "axios": "^1.18.1",
-    "bootstrap": "^5.3.8",
-    "formik": "^2.4.9",
-    "json-server": "^1.0.0-beta.15",
-    "lucide-react": "^1.22.0",
-    "react": "^19.2.7",
-    "react-bootstrap": "^2.10.10",
-    "react-dom": "^19.2.7",
-    "react-redux": "^9.3.0",
-    "react-router-dom": "^7.18.1",
-    "react-toastify": "^11.1.0",
-    "recharts": "^3.9.1",
-    "tailwindcss": "^4.3.2",
-    "yup": "^1.7.1",
-    "zustand": "^5.0.14"
+    "@tanstack/react-query": "^5.59.0",
+    "axios": "^1.7.7",
+    "bootstrap": "^5.3.3",
+    "formik": "^2.4.6",
+    "json-server": "^0.17.4",
+    "lucide-react": "^0.454.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.27.0",
+    "recharts": "^2.13.0",
+    "yup": "^1.4.0",
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.3",
-    "jsdom": "^29.1.1",
-    "oxlint": "^1.71.0",
-    "vite": "^8.1.1",
-    "vitest": "^4.1.9"
+    "@tanstack/react-query-devtools": "^5.59.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "concurrently": "^9.0.1",
+    "vite": "^5.4.9"
   }
 }

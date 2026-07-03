@@ -1,20 +1,20 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from 'react-router-dom';
+import Navbar from './Navbar';
+import Footer from './Footer';
+import './CustomerLayout.css';
 
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+export function CustomerLayout() {
+  const location = useLocation();
 
-function CustomerLayout() {
   return (
-    <div className="d-flex flex-column" style={{ minHeight: "100vh" }}>
-      {/* Top navigation */}
+    <div className="customer-layout">
       <Navbar />
-      {/* Main content */}
 
-      <main className="container-fluid flex-grow-1 py-4">
-        <Outlet />
+      <main className="customer-layout__content">
+        <div key={location.pathname} className="page-container fade-slide-up-enter">
+          <Outlet />
+        </div>
       </main>
-
-      {/* footer */}
 
       <Footer />
     </div>

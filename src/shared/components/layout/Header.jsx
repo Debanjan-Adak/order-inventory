@@ -1,42 +1,83 @@
-import ThemeToggle from "../common/ThemeToggle";
-import useAuth from "../../../features/auth/hooks/useAuth";
+import { useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ChevronDown } from "lucide-react";
+import { useAuthStore } from "@features/auth/store/authStore";
+import { useOnClickOutside } from "@shared/hooks/useOnClickOutside";
+import { getInitials } from "@shared/utils/helpers";
+import { ThemeToggle } from "@shared/components/common/ThemeToggle";
+import "./Header.css";
 
-function Header() {
-  const { isAuthenticated, user, logout } = useAuth();
+function AdminUserMenu() {
+  const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useOnClickOutside(menuRef, () => setIsOpen(false));
+
+  const handleLogout = () => {
+    setIsOpen(false);
+    logout();
+    navigate("/login");
+  };
 
   return (
-    <header className="bg-white border-bottom shadow-sm px-4 py-3">
-      <div className="d-flex justify-content-between align-items-center">
-        <div>
-          <h3 className="mb-0">Dashboard</h3>
+    <div className="admin-user-menu" ref={menuRef}>
+      <button
+        type="button"
+        className="admin-user-menu__trigger"
+        onClick={() => setIsOpen((prev) => !prev)}
+        aria-haspopup="true"
+        aria-expanded={isOpen}
+        aria-label="Account menu"
+      >
+        <span className="admin-user-menu__avatar">
+          {getInitials(user?.fullName)}
+        </span>
+        <ChevronDown size={16} aria-hidden="true" />
+      </button>
 
-          <small className="text-muted">
-            Welcome to Order Inventory Management
-          </small>
+      {isOpen && (
+        <div className="admin-user-menu__dropdown" role="menu">
+          <Link
+            to="/profile"
+            className="admin-user-menu__item"
+            role="menuitem"
+            onClick={() => setIsOpen(false)}
+          >
+            Profile
+          </Link>
+          <Link
+            to="/admin"
+            className="admin-user-menu__item"
+            role="menuitem"
+            onClick={() => setIsOpen(false)}
+          >
+            Dashboard
+          </Link>
+          <button
+            type="button"
+            className="admin-user-menu__item admin-user-menu__item--danger"
+            role="menuitem"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
         </div>
+      )}
+    </div>
+  );
+}
 
-        <div className="d-flex align-items-center gap-3">
-          <ThemeToggle />
+export function Header({ title }) {
+  return (
+    <header className="admin-header">
+      <h1 className="admin-header__title">{title}</h1>
 
-          {isAuthenticated && (
-            <div className="dropdown">
-              <button
-                className="btn btn-outline-secondary dropdown-toggle"
-                data-bs-toggle="dropdown"
-              >
-                {user?.name || user?.full_name || "Admin"}
-              </button>
-
-              <ul className="dropdown-menu dropdown-menu-end">
-                <li>
-                  <button className="dropdown-item" onClick={logout}>
-                    Logout
-                  </button>
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
+      <div className="admin-header__actions">
+        <ThemeToggle />
+        <AdminUserMenu />
       </div>
     </header>
   );

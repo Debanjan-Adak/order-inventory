@@ -1,49 +1,112 @@
-import Pagination from "react-bootstrap/Pagination";
-function CustomPagination({currentPage,totalPages,totalItems,pageSize,onPageChange}) {
-  if (totalPages <= 1) return null;
-  const startItem = (currentPage - 1) * pageSize + 1;
-  const endItem = Math.min(currentPage * pageSize, totalItems);
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import "./Pagination.css";
+
+const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
+
+function buildPageWindow(page, totalPages) {
+  const pages = [];
+  const visible = new Set([1, totalPages, page - 1, page, page + 1]);
+
+  for (let candidate = 1; candidate <= totalPages; candidate += 1) {
+    if (visible.has(candidate)) {
+      pages.push(candidate);
+    }
+  }
+
+  const result = [];
+  let previous = null;
+  for (const current of pages) {
+    if (previous !== null && current - previous > 1) {
+      result.push({ type: "ellipsis", key: `ellipsis-${previous}` });
+    }
+    result.push({ type: "page", value: current, key: `page-${current}` });
+    previous = current;
+  }
+
+  return result;
+}
+
+export function Pagination({
+  page,
+  totalPages,
+  onPageChange,
+  pageSize,
+  onPageSizeChange,
+}) {
+  const safeTotalPages = Math.max(totalPages, 1);
+  const items = buildPageWindow(page, safeTotalPages);
+
   return (
-    <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4">
- 
-      <small className="text-secondary mb-2 mb-md-0">
-        Showing <strong>{startItem}</strong> - <strong> {endItem}</strong> of{" "}
-        <strong>{totalItems}</strong>
-      </small>
+    <div className="pagination">
+      <div className="pagination__controls">
+        <button
+          type="button"
+          className="pagination__button pagination__button--nav"
+          onClick={() => onPageChange(page - 1)}
+          disabled={page <= 1}
+          aria-label="Previous page"
+        >
+          <ChevronLeft size={16} strokeWidth={2} />
+        </button>
 
-      <Pagination className="mb-0">
-        <Pagination.First
-          disabled={currentPage === 1}
-          onClick={() => onPageChange(1)}
-        />
+        {items.map((item) =>
+          item.type === "ellipsis" ? (
+            <span
+              key={item.key}
+              className="pagination__ellipsis"
+              aria-hidden="true"
+            >
+              &hellip;
+            </span>
+          ) : (
+            <button
+              key={item.key}
+              type="button"
+              className={`pagination__button ${item.value === page ? "pagination__button--active" : ""}`}
+              onClick={() => onPageChange(item.value)}
+              aria-current={item.value === page ? "page" : undefined}
+              aria-label={`Page ${item.value}`}
+            >
+              {item.value}
+            </button>
+          ),
+        )}
 
-        <Pagination.Prev
-          disabled={currentPage === 1}
-          onClick={() => onPageChange(currentPage - 1)}
-        />
+        <button
+          type="button"
+          className="pagination__button pagination__button--nav"
+          onClick={() => onPageChange(page + 1)}
+          disabled={page >= safeTotalPages}
+          aria-label="Next page"
+        >
+          <ChevronRight size={16} strokeWidth={2} />
+        </button>
+      </div>
 
-        {[...Array(totalPages)].map((_, index) => (
-          <Pagination.Item
-            key={index + 1}
-            active={currentPage === index + 1}
-            onClick={() => onPageChange(index + 1)}
+      {pageSize && onPageSizeChange ? (
+        <div className="pagination__page-size">
+          <label
+            htmlFor="pagination-page-size"
+            className="pagination__page-size-label"
           >
-            {index + 1}
-          </Pagination.Item>
-        ))}
-
-        <Pagination.Next
-          disabled={currentPage === totalPages}
-          onClick={() => onPageChange(currentPage + 1)}
-        />
-
-        <Pagination.Last
-          disabled={currentPage === totalPages}
-          onClick={() => onPageChange(totalPages)}
-        />
-      </Pagination>
+            Rows per page
+          </label>
+          <select
+            id="pagination-page-size"
+            className="pagination__page-size-select"
+            value={pageSize}
+            onChange={(event) => onPageSizeChange(Number(event.target.value))}
+          >
+            {PAGE_SIZE_OPTIONS.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
+      ) : null}
     </div>
   );
 }
 
-export default CustomPagination;
+export default Pagination;
