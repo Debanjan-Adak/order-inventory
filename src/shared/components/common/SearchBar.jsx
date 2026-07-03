@@ -1,33 +1,36 @@
-import { Form, InputGroup, Button } from "react-bootstrap";
-import { Search, X } from "lucide-react";
+import { useEffect, useState } from 'react';
+import { Search } from 'lucide-react';
+import { useDebounce } from '@shared/hooks/useDebounce';
+import './SearchBar.css';
 
-function SearchBar({value,onChange,placeholder = "Search...",disabled = false}) {
+export function SearchBar({ value, onChange, placeholder = 'Search…' }) {
+  const [inputValue, setInputValue] = useState(value ?? '');
+  const debouncedValue = useDebounce(inputValue, 300);
+
+  // Keep local state in sync if the caller resets `value` externally.
+  useEffect(() => {
+    setInputValue(value ?? '');
+  }, [value]);
+
+  useEffect(() => {
+    if (debouncedValue !== value) {
+      onChange(debouncedValue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedValue]);
+
   return (
-    <InputGroup
-      className="shadow-sm rounded"
-      style={{
-        maxWidth: "400px",
-      }}
-    >
-  
-      <InputGroup.Text>
-        <Search size={18} />
-      </InputGroup.Text>
-
-      <Form.Control
+    <div className="search-bar">
+      <Search className="search-bar__icon" size={16} strokeWidth={2} aria-hidden="true" />
+      <input
         type="text"
+        className="search-bar__input"
+        value={inputValue}
+        onChange={(event) => setInputValue(event.target.value)}
         placeholder={placeholder}
-        value={value}
-        disabled={disabled}
-        onChange={(e) => onChange(e.target.value)}
+        aria-label={placeholder}
       />
-
-      {value && (
-        <Button variant="outline-secondary" onClick={() => onChange("")}>
-          <X size={18} />
-        </Button>
-      )}
-    </InputGroup>
+    </div>
   );
 }
 

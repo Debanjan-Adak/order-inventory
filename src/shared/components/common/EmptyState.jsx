@@ -1,27 +1,30 @@
-import { Inbox } from "lucide-react";
-function EmptyState({
-  title = "No Data Found",
-
-  message = "Nothing to display.",
-
-  heading,
-
-  body,
-}) {
-  const displayTitle = heading || title;
-  const displayMessage = body || message;
-
+import "./EmptyState.css";
+export function EmptyState({ icon: Icon, heading, body, action }) {
   return (
-    <div className="text-center py-5">
-      {
-            <Inbox
-                size={60}
-                className="mb-3 text-secondary"
-            />
-            }
-      <h4>{displayTitle}</h4>
-      <p className="text-secondary">{displayMessage}</p>
+    <div className="empty-state">
+      {Icon ? (
+        <div className="empty-state__icon-backdrop">
+          <Icon
+            className="empty-state__icon"
+            size={48}
+            strokeWidth={1.75}
+            aria-hidden="true"
+          />
+        </div>
+      ) : null}
+      {heading ? <h3 className="empty-state__heading">{heading}</h3> : null}
+      {body ? <p className="empty-state__body">{body}</p> : null}
+      {action ? (
+        <button
+          type="button"
+          className="btn btn-primary empty-state__action"
+          onClick={action.onClick}
+        >
+          {action.label}
+        </button>
+      ) : null}
     </div>
   );
 }
+
 export default EmptyState;

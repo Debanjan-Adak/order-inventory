@@ -1,9 +1,11 @@
-function Footer() {
+import './Footer.css';
+
+export function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="bg-dark text-white text-center py-3 mt-auto">
-      <div className="container">
-        <small>© 2026 Order Inventory Management System</small>
-      </div>
+    <footer className="footer">
+      <p className="footer__text">© {currentYear} Order Inventory Management</p>
     </footer>
   );
 }

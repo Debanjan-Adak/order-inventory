@@ -1,16 +1,20 @@
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from 'react-router-dom';
+import Footer from './Footer';
+import './PublicLayout.css';
 
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-
-function PublicLayout() {
+export function PublicLayout() {
   return (
-    <div className="d-flex flex-column" style={{ minHeight: "100vh" }}>
+    <div className="public-layout">
+      <header className="public-layout__header">
+        <Link to="/" className="public-layout__logo">
+          OIMS
+        </Link>
+      </header>
 
-      <Navbar />
-      <main className="container-fluid flex-grow-1 py-4">
+      <main className="public-layout__content">
         <Outlet />
       </main>
+
       <Footer />
     </div>
   );

@@ -1,20 +1,29 @@
-import useTheme from "../../hooks/useTheme";
-import { Moon, Sun } from "lucide-react";
+import { Sun, Moon } from 'lucide-react';
+import { useThemeStore } from '@stores/themeStore';
+import './ThemeToggle.css';
 
-function ThemeToggle() {
-  const {
-    theme,
-    toggleTheme,
-  } = useTheme();
+export function ThemeToggle() {
+  const theme = useThemeStore((state) => state.theme);
+  const toggleTheme = useThemeStore((state) => state.toggleTheme);
+
+  const isDark = theme === 'dark';
+  const label = isDark ? 'Switch to light theme' : 'Switch to dark theme';
 
   return (
     <button
-      className="btn btn-outline-light d-flex align-items-center justify-content-center p-2"
+      type="button"
+      className="theme-toggle"
       onClick={toggleTheme}
-      aria-label="Toggle theme"
-      style={{ borderRadius: "50%", border: "none" }}
+      aria-label={label}
+      title={label}
     >
-      {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
+      <span className="theme-toggle__icon-wrapper" key={theme}>
+        {isDark ? (
+          <Moon size={18} strokeWidth={1.75} aria-hidden="true" />
+        ) : (
+          <Sun size={18} strokeWidth={1.75} aria-hidden="true" />
+        )}
+      </span>
     </button>
   );
 }

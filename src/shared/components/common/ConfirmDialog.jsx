@@ -1,25 +1,46 @@
-// confirmation in pages delete product,del customer, ban customer, cancel order, logout.
-import { Button } from "react-bootstrap";
-import CustomModal from "./Modal";
-function ConfirmDialog({show,isOpen,onClose,onCancel,onConfirm,title = "Confirm Action",message = "Are you sure you want to continue?",
-body,confirmText = "Confirm",confirmLabel,cancelText = "Cancel",cancelLabel,confirmVariant = "danger",isDestructive}) 
-{
-    const isVisible = show !== undefined ? show : isOpen;
-    const closeHandler = onClose || onCancel;
-    const bodyText = message || body;
-    const confirmBtnText = confirmText !== "Confirm" ? confirmText : (confirmLabel || confirmText);
-    const cancelBtnText = cancelText !== "Cancel" ? cancelText : (cancelLabel || cancelText);
-    const variant = isDestructive ? "danger" : confirmVariant;
-    return (
+import { Modal } from './Modal';
+import { Loader } from './Loader';
+import './ConfirmDialog.css';
+export function ConfirmDialog({
+  isOpen,
+  onClose,
+  onConfirm,
+  title,
+  body,
+  confirmLabel = 'Confirm',
+  cancelLabel = 'Cancel',
+  isDestructive = true,
+  isPending = false,
+}) {
+  const footer = (
+    <div className="confirm-dialog__actions">
+      <button
+        type="button"
+        className="btn btn-outline-secondary confirm-dialog__cancel"
+        onClick={onClose}
+        disabled={isPending}
+      >
+        {cancelLabel}
+      </button>
+      <button
+        type="button"
+        className={`btn confirm-dialog__confirm ${
+          isDestructive ? 'confirm-dialog__confirm--destructive' : 'btn-primary'
+        }`}
+        onClick={onConfirm}
+        disabled={isPending}
+      >
+        {isPending ? <Loader size="sm" /> : null}
+        {confirmLabel}
+      </button>
+    </div>
+  );
 
-        <CustomModal show={isVisible} onClose={closeHandler} title={title} size="md" footer={
-        <>
-            <Button variant="secondary" onClick={closeHandler}>{cancelBtnText}</Button>
-            <Button variant={variant} onClick={onConfirm}>{confirmBtnText}</Button>
-        </>
-        }>
-        <p className="mb-0">{bodyText}</p>
-        </CustomModal>
-    );
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} title={title} size="sm" footer={footer}>
+      <p className="confirm-dialog__body">{body}</p>
+    </Modal>
+  );
 }
+
 export default ConfirmDialog;
