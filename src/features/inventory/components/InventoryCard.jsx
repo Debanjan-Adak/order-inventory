@@ -6,7 +6,7 @@ import './InventoryCard.css';
 
 /**
  * @param {object} props
- * @param {object} props.row - inventory row `{..., product, store}`
+ * @param {object} props.row 
  */
 
 export function InventoryCard({ row }) {

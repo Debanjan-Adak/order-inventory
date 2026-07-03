@@ -1,87 +1,98 @@
-import React, { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
+import { PackageSearch } from "lucide-react";
+import { DataTable } from "@shared/components/common/DataTable";
+import { useCustomers } from "@features/customers/hooks/useCustomers";
+import { useStores } from "@features/stores/hooks/useStores";
+import { formatDate } from "@shared/utils/helpers";
+import { OrderStatus } from "./OrderStatus";
+import "./OrderTable.css";
 
-export const OrderTable = ({ orders = [], isLoading, onView, onCancel, onDelete }) => {
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("ALL");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+const DEFAULT_EMPTY_STATE = {
+  icon: PackageSearch,
+  heading: "No orders yet",
+  body: "Orders will appear here once customers start ordering.",
+};
 
-  const filtered = useMemo(() => {
-    return orders.filter(o => {
-      const matchSearch = o.order_id?.toString().includes(search) || o.customer_id?.toString().includes(search);
-      const matchStatus = status === "ALL" || o.order_status === status;
-      return matchSearch && matchStatus;
-    });
-  }, [orders, search, status]);
+/**
+ * @param {object} props
+ * @param {Array<object>} props.orders
+ * @param {boolean} [props.isLoading]
+ * @param {boolean} [props.isError]
+ * @param {() => void} [props.onRetry]
+ * @param {string} props.basePath - `/admin/orders` or `/my-orders`, so the
+ *   "View" action stays context-agnostic.
+ * @param {object} [props.emptyState] - overrides the default empty state
+ *   (used to distinguish "no data" vs "no results" upstream).
+ */
+export function OrderTable({
+  orders,
+  isLoading,
+  isError,
+  onRetry,
+  basePath,
+  emptyState,
+  pagination,
+}) {
+  const { data: customers } = useCustomers();
+  const { data: stores } = useStores();
 
-  const paginated = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return filtered.slice(start, start + itemsPerPage);
-  }, [filtered, currentPage]);
+  const customerNameById = new Map(
+    (customers ?? []).map((c) => [c.customer_id, c.full_name]),
+  );
+  const storeNameById = new Map(
+    (stores ?? []).map((s) => [s.store_id, s.store_name]),
+  );
+
+  const columns = [
+    { key: "order_id", header: "Order ID" },
+    {
+      key: "customer",
+      header: "Customer",
+      render: (row) =>
+        customerNameById.get(row.customer_id) ?? `Customer #${row.customer_id}`,
+    },
+    {
+      key: "store",
+      header: "Store",
+      render: (row) =>
+        storeNameById.get(row.store_id) ?? `Store #${row.store_id}`,
+    },
+    {
+      key: "order_tms",
+      header: "Date",
+      render: (row) => formatDate(row.order_tms),
+    },
+    {
+      key: "order_status",
+      header: "Status",
+      render: (row) => <OrderStatus status={row.order_status} />,
+    },
+    {
+      key: "actions",
+      header: "",
+      render: (row) => (
+        <Link
+          className="btn btn-sm btn-outline-secondary order-table__view"
+          to={`${basePath}/${row.id}`}
+        >
+          View
+        </Link>
+      ),
+    },
+  ];
 
   return (
-    <div>
-      <div>
-        <h5>{onDelete ? "System Order Ledger" : "My Order Ledger"}</h5>
-        <p>{onDelete ? "Monitor and inspect historical warehouse logistics dispatches" : 
-        "Monitor and track your placed warehouse orders"}</p>
-
-        <div>
-          <input 
-            type="text" 
-            placeholder="Search Reference..." 
-            value={search} 
-            onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
-          />
-
-          <select value={status} onChange={e => { setStatus(e.target.value); setCurrentPage(1); }}>
-            <option value="ALL">All Statuses</option>
-            <option value="COMPLETE">Complete</option>
-            <option value="CANCELLED">Cancelled</option>
-            <option value="PENDING">Pending</option>
-          </select>
-        </div>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Timestamp</th>
-            <th>Customer Ref</th>
-            <th>Store Node ID</th>
-            <th>Status State</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {isLoading ? (
-            <tr><td colSpan="6">Loading...</td></tr>
-          ) : paginated.length > 0 ? (
-            paginated.map(order => (
-              <tr key={order.id}>
-                <td>#{order.order_id}</td>
-                <td>{order.order_tms}</td>
-                <td>Node #{order.customer_id}</td>
-                <td>Store #{order.store_id}</td>
-                <td>{order.order_status}</td>
-                <td>
-                  <button onClick={() => onView(order.id)}>Details</button>
-                  {onCancel && order.order_status !== "CANCELLED" && order.order_status !== "COMPLETE" && (
-                    <button onClick={() => onCancel(order.id)}>Cancel</button>
-                  )}
-                  {onDelete && (
-                    <button onClick={() => onDelete(order.id)}>Delete</button>
-                  )}
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr><td colSpan="6">No transactional ledger data available.</td></tr>
-          )}
-        </tbody>
-      </table>
-    </div>
+    <DataTable
+      columns={columns}
+      rows={orders ?? []}
+      isLoading={isLoading}
+      isError={isError}
+      onRetry={onRetry}
+      emptyState={emptyState ?? DEFAULT_EMPTY_STATE}
+      getRowKey={(row) => row.id}
+      pagination={pagination}
+    />
   );
-};
+}
+
+export default OrderTable;

@@ -1,27 +1,53 @@
-import React from "react";
+import { Link } from "react-router-dom";
+import { Store } from "lucide-react";
+import { formatDate } from "@shared/utils/helpers";
+import { OrderStatus } from "./OrderStatus";
+import "./OrderCard.css";
 
-export const OrderCard = ({ order, theme, onView }) => {
-  const isDark = theme === "dark";
+/**
+ * @param {object} props
+ * @param {object} props.order 
+ * @param {string} [props.storeName]
+ * @param {string} props.basePath 
+ */
+export function OrderCard({ order, storeName, basePath }) {
   return (
-    <div className={`card p-3 mb-3 border border-1 shadow-sm transition-all h-100 
-        ${isDark ? "bg-dark text-light border-secondary" : "bg-white text-dark"}`}>
-      <div className="card-body d-flex flex-column justify-content-between">
-        <div>
-          <span className="badge bg-secondary font-monospace mb-2">ID: #{order.order_id}</span>
-          <h5 className="card-title fw-bold my-1">Customer Identifier: #{order.customer_id}</h5>
-          <p className="card-text text-muted small">Dispatched: {order.order_tms}</p>
-        </div>
-        <div className="d-flex justify-content-between align-items-center mt-3">
-          <span className={`badge ${order.order_status === "COMPLETE" ? "bg-success" : 
-            order.order_status === "CANCELLED" ? "bg-danger" : "bg-warning"}`}>
-            {order.order_status}
+    <div className="order-card d-flex flex-column gap-2">
+      <div className="d-flex justify-content-between align-items-center gap-2">
+        <span className="order-card__id fw-semibold">
+          Order #{order.order_id}
+        </span>
+
+        <OrderStatus status={order.order_status} />
+      </div>
+
+      <div className="d-flex flex-column gap-1">
+        <div className="order-card__row d-flex justify-content-between align-items-center">
+          <span className="order-card__label d-inline-flex align-items-center gap-1">
+            Placed
           </span>
-          <button className="btn btn-sm btn-primary" style={{ backgroundColor: "#4F46E5", border: "none" }} 
-          onClick={() => onView(order.id)}>
-            Inspect
-          </button>
+
+          <span>{formatDate(order.order_tms)}</span>
+        </div>
+
+        <div className="order-card__row d-flex justify-content-between align-items-center">
+          <span className="order-card__label d-inline-flex align-items-center gap-1">
+            <Store size={14} strokeWidth={1.75} aria-hidden="true" />
+            Store
+          </span>
+
+          <span>{storeName ?? `Store #${order.store_id}`}</span>
         </div>
       </div>
+
+      <Link
+        className="btn btn-outline-secondary align-self-start mt-1"
+        to={`${basePath}/${order.id}`}
+      >
+        View Order
+      </Link>
     </div>
   );
-};
+}
+
+export default OrderCard;

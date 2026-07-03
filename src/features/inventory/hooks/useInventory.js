@@ -5,7 +5,7 @@ export const INVENTORY_QUERY_KEY = ['inventory'];
 
 /**
  *
- * @param {number|string} [storeId] - pass `undefined` for the unfiltered "all" case
+ * @param {number|string} [storeId] 
  */
 
 export function useInventory(storeId) {

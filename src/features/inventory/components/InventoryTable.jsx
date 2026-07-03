@@ -14,7 +14,7 @@ const DEFAULT_EMPTY_STATE = {
 /**
  *
  * @param {object} props
- * @param {Array<object>} props.rows - inventory rows `{..., product, store}`
+ * @param {Array<object>} props.rows 
  * @param {boolean} [props.isLoading]
  * @param {boolean} [props.isError]
  * @param {() => void} [props.onRetry]

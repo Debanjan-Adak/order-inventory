@@ -23,7 +23,7 @@ export function getStockTone(quantity) {
 /**
  *
  * @param {object} props
- * @param {number} props.quantity - `product_inventory` for the row
+ * @param {number} props.quantity 
  */
 export function StockBadge({ quantity }) {
   const value = Number(quantity) || 0;

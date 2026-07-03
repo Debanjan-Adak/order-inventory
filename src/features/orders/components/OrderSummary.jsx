@@ -1,24 +1,60 @@
-import React from "react";
+import { useInventoryOrderDetails } from "@features/inventory/hooks/useInventory";
+import { Skeleton } from "@shared/components/common/Skeleton";
+import formatCurrency from "@shared/utils/formatCurrency";
+import "./OrderSummary.css";
 
-export const OrderSummary = ({ items = [], theme }) => {
-  const total = items.reduce((sum, item) => sum + item.unit_price * item.quantity, 0);
+export function OrderSummary({ orderId }) {
+  const { data: items, isLoading } = useInventoryOrderDetails(orderId);
+
+  const itemCount = (items ?? []).reduce(
+    (sum, item) => sum + (item.quantity ?? 0),
+    0,
+  );
+
+  const subtotal = (items ?? []).reduce(
+    (sum, item) => sum + (item.lineTotal ?? 0),
+    0,
+  );
 
   return (
-    <div className={`card p-3 border shadow-sm ${theme === "dark" ? 
-    "bg-dark text-light border-secondary" : "bg-light text-dark"}`}>
-      <h6 className="fw-bold border-bottom pb-2 text-uppercase tracking-wider font-monospace" 
-      style={{ fontSize: "0.8rem" }}>Financial Summary</h6>
-      
-      <div className="d-flex justify-content-between mb-2 small">
-        <span>Accumulated Line Items Valuation:</span>
-        <span className="font-monospace fw-bold">${total.toFixed(2)}</span>
+    <div className="order-summary">
+      <h3 className="order-summary__title">Order Summary</h3>
+
+      <div className="order-summary__row d-flex justify-content-between align-items-center">
+        <span className="order-summary__label">Items</span>
+
+        {isLoading ? (
+          <Skeleton width={40} height={14} />
+        ) : (
+          <span>{itemCount}</span>
+        )}
       </div>
-      
-      <div className="d-flex justify-content-between border-top pt-2 fw-bold" 
-      style={{ color: "#4F46E5" }}>
-        <span>Gross Asset Valuation Total:</span>
-        <span className="font-monospace">${total.toFixed(2)}</span>
+
+      <div className="order-summary__row d-flex justify-content-between align-items-center">
+        <span className="order-summary__label">Subtotal</span>
+
+        {isLoading ? (
+          <Skeleton width={64} height={14} />
+        ) : (
+          <span>{formatCurrency(subtotal)}</span>
+        )}
+      </div>
+
+      <div className="order-summary__divider" />
+
+      <div className="order-summary__row order-summary__row--total d-flex justify-content-between align-items-center">
+        <span className="order-summary__label">Total Amount</span>
+
+        {isLoading ? (
+          <Skeleton width={96} height={28} />
+        ) : (
+          <span className="order-summary__total-value">
+            {formatCurrency(subtotal)}
+          </span>
+        )}
       </div>
     </div>
   );
-};
+}
+
+export default OrderSummary;

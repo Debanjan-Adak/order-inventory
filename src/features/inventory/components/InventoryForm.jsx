@@ -11,9 +11,9 @@ import './InventoryForm.css';
 
  * @param {object} props
  * @param {object|null} props.inventoryRow
- * @param {number} [props.productId] - required when `inventoryRow` is null
- * @param {number} [props.storeId] - required when `inventoryRow` is null
- * @param {() => void} [props.onDone] - called after a successful save
+ * @param {number} [props.productId] 
+ * @param {number} [props.storeId] 
+ * @param {() => void} [props.onDone] 
  */
 export function InventoryForm({ inventoryRow, productId, storeId, onDone }) {
   const updateInventory = useUpdateInventory();
