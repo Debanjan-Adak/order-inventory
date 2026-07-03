@@ -1,44 +1,101 @@
-import { useMemo } from "react";
-import { DollarSign } from "lucide-react";
-import { useOrders } from "../../orders/hooks/useOrders";
-import { useInventoryOrderDetails } from "../../inventory/hooks/useInventory";
-import { formatCurrency } from "../../../shared/utils/formatCurrency";
-import StatsCard from "./StatsCard";
+import { useMemo } from 'react';
+import { useQueries } from '@tanstack/react-query';
+import { TrendingUp } from 'lucide-react';
+import { useOrders } from '@features/orders/hooks/useOrders';
+import { inventoryApi } from '@features/inventory/api/inventoryApi';
+import formatCurrency from '@shared/utils/formatCurrency';
+import { Skeleton } from '@shared/components/common/Skeleton';
+import { ErrorState } from '@shared/components/common/ErrorState';
+import './RevenueCard.css';
 
-function RevenueCard() {
-  const { data: orders, isLoading: ordersLoading } = useOrders();
+const RECENT_ORDER_COUNT = 10;
 
-  const completedOrderIds = useMemo(() => {
-    if (!orders) return [];
-    return orders
-      .filter((order) => order.order_status === "COMPLETE")
-      .map((order) => order.order_id);
+export function RevenueCard() {
+  const {
+    data: orders = [],
+    isLoading: ordersLoading,
+    isError: ordersIsError,
+    refetch: refetchOrders,
+  } = useOrders();
+
+  const recentOrderIds = useMemo(() => {
+    return [...orders]
+      .sort((a, b) => new Date(b.order_tms) - new Date(a.order_tms))
+      .slice(0, RECENT_ORDER_COUNT)
+      .map((order) => order.order_id ?? order.id)
+      .filter((id) => id !== undefined && id !== null);
   }, [orders]);
 
-  const detailQueries = completedOrderIds.map((orderId) =>
-    useInventoryOrderDetails(orderId)
-  );
+  const detailQueries = useQueries({
+    queries: recentOrderIds.map((orderId) => ({
+      queryKey: ['dashboard', 'revenue-order-details', orderId],
+      queryFn: () => inventoryApi.getOrderDetails(orderId),
+      enabled: !ordersLoading,
+    })),
+  });
 
-  const isLoading = ordersLoading || detailQueries.some((q) => q.isLoading);
+  const detailsLoading =
+    recentOrderIds.length > 0 &&
+    detailQueries.some((query) => query.isLoading);
+
+  const detailsError = detailQueries.some((query) => query.isError);
+
+  const isLoading = ordersLoading || detailsLoading;
+  const isError = ordersIsError || detailsError;
 
   const total = useMemo(() => {
     return detailQueries.reduce((sum, query) => {
-      const items = query.data || [];
-      const orderTotal = items.reduce(
-        (lineSum, item) => lineSum + item.unit_price * item.quantity,
+      const lineItems = Array.isArray(query.data) ? query.data : [];
+
+      const orderSum = lineItems.reduce(
+        (lineSum, item) => lineSum + (Number(item.lineTotal) || 0),
         0
       );
-      return sum + orderTotal;
+
+      return sum + orderSum;
     }, 0);
   }, [detailQueries]);
 
+  function handleRetry() {
+    refetchOrders();
+    detailQueries.forEach((query) => query.refetch?.());
+  }
+
   return (
-    <StatsCard
-      icon={DollarSign}
-      label="Revenue"
-      value={formatCurrency(total)}
-      isLoading={isLoading}
-    />
+    <div className="revenue-card">
+      <div className="revenue-card__header">
+        <TrendingUp
+          className="revenue-card__icon"
+          size={18}
+          strokeWidth={1.75}
+          aria-hidden="true"
+        />
+        <h3 className="revenue-card__title">Revenue</h3>
+      </div>
+
+      {isLoading ? (
+        <div className="revenue-card__skeleton">
+          <Skeleton variant="rect" height={40} width="60%" />
+          <Skeleton variant="text" height={14} width="80%" />
+        </div>
+      ) : isError ? (
+        <ErrorState
+          heading="Couldn't load revenue"
+          body="We couldn't estimate revenue from recent orders."
+          onRetry={handleRetry}
+        />
+      ) : (
+        <>
+          <p className="revenue-card__value tabular-nums">
+            {formatCurrency(total)}
+          </p>
+
+          <p className="revenue-card__caption">
+            Estimated revenue (last {RECENT_ORDER_COUNT} orders)
+          </p>
+        </>
+      )}
+    </div>
   );
 }
 

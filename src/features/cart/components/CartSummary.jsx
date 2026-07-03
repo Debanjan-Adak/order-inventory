@@ -1,39 +1,48 @@
-import { useNavigate } from "react-router-dom";
-import useCartStore from "../store/cartStore";
+import { Link } from "react-router-dom";
+import { useCartStore } from "../store/cartStore";
+import formatCurrency from "@shared/utils/formatCurrency";
 import "./CartSummary.css";
 
-function formatCurrency(amount) {
-  return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(amount);
-}
-
-function CartSummary() {
-  const navigate = useNavigate();
+export function CartSummary() {
   const items = useCartStore((state) => state.items);
-  const subtotal = useCartStore((state) => state.getSubtotal());
-  const itemCount = useCartStore((state) => state.getItemCount());
+  const getSubtotal = useCartStore((state) => state.getSubtotal);
+  const getItemCount = useCartStore((state) => state.getItemCount);
+
+  const isEmpty = items.length === 0;
+  const itemCount = getItemCount();
+  const subtotal = getSubtotal();
 
   return (
     <aside className="cart-summary">
-      <h3 className="cart-summary-title">Order summary</h3>
+      <h2 className="cart-summary__heading">Order Summary</h2>
 
-      <div className="cart-summary-row">
-        <span>Items ({itemCount})</span>
-        <span>{formatCurrency(subtotal)}</span>
+      <div className="cart-summary__row">
+        <span className="cart-summary__label">Items ({itemCount})</span>
+        <span className="cart-summary__value tabular-nums">
+          {formatCurrency(subtotal)}
+        </span>
       </div>
 
-      <div className="cart-summary-row cart-summary-total">
-        <span>Total</span>
-        <span>{formatCurrency(subtotal)}</span>
+      <div className="cart-summary__divider" />
+
+      <div className="cart-summary__row cart-summary__row--total">
+        <span className="cart-summary__label">Subtotal</span>
+        <span className="cart-summary__value tabular-nums">
+          {formatCurrency(subtotal)}
+        </span>
       </div>
 
-      <button
-        type="button"
-        className="btn btn-primary w-100 mt-3"
-        disabled={items.length === 0}
-        onClick={() => navigate("/checkout")}
+      <Link
+        to="/checkout"
+        className={`btn btn-primary cart-summary__checkout-btn${isEmpty ? " disabled" : ""}`}
+        aria-disabled={isEmpty}
+        tabIndex={isEmpty ? -1 : undefined}
+        onClick={(event) => {
+          if (isEmpty) event.preventDefault();
+        }}
       >
-        Proceed to checkout
-      </button>
+        Checkout
+      </Link>
     </aside>
   );
 }

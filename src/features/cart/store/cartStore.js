@@ -1,80 +1,64 @@
 import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 
-// Cart items are stored as plain objects so persist can serialize them
-// straight to localStorage without any custom hydration logic.
-// Shape: { productId, name, unitPrice, colour, quantity }
+export const useCartStore = create(
+  persist(
+    (set, get) => ({
+      items: [],
 
-const useCartStore = create()(
-  devtools(
-    persist(
-      (set, get) => ({
-        items: [],
+      addItem: (product, quantity = 1) =>
+        set((state) => {
+          const existing = state.items.find(
+            (item) => item.productId === product.productId,
+          );
+          if (existing) {
+            return {
+              items: state.items.map((item) =>
+                item.productId === product.productId
+                  ? { ...item, quantity: item.quantity + quantity }
+                  : item,
+              ),
+            };
+          }
+          return { items: [...state.items, { ...product, quantity }] };
+        }),
 
-        addItem: (product, quantity = 1) =>
-          set(
-            (state) => {
-              const existing = state.items.find((item) => item.productId === product.id);
+      updateQuantity: (productId, quantity) =>
+        set((state) => {
+          if (quantity <= 0) {
+            return {
+              items: state.items.filter((item) => item.productId !== productId),
+            };
+          }
+          return {
+            items: state.items.map((item) =>
+              item.productId === productId ? { ...item, quantity } : item,
+            ),
+          };
+        }),
 
-              if (existing) {
-                return {
-                  items: state.items.map((item) =>
-                    item.productId === product.id
-                      ? { ...item, quantity: item.quantity + quantity }
-                      : item
-                  ),
-                };
-              }
+      removeItem: (productId) =>
+        set((state) => ({
+          items: state.items.filter((item) => item.productId !== productId),
+        })),
 
-              return {
-                items: [
-                  ...state.items,
-                  {
-                    productId: product.id,
-                    name: product.name,
-                    unitPrice: product.unitPrice,
-                    colour: product.colour,
-                    quantity,
-                  },
-                ],
-              };
-            },
-            false,
-            "cart/addItem"
-          ),
+      clearCart: () => set({ items: [] }),
 
-        removeItem: (productId) =>
-          set(
-            (state) => ({ items: state.items.filter((item) => item.productId !== productId) }),
-            false,
-            "cart/removeItem"
-          ),
+      getSubtotal: () => {
+        return get().items.reduce(
+          (sum, item) => sum + item.unitPrice * item.quantity,
+          0,
+        );
+      },
 
-        updateQuantity: (productId, quantity) =>
-          set(
-            (state) => ({
-              items:
-                quantity <= 0
-                  ? state.items.filter((item) => item.productId !== productId)
-                  : state.items.map((item) =>
-                      item.productId === productId ? { ...item, quantity } : item
-                    ),
-            }),
-            false,
-            "cart/updateQuantity"
-          ),
-
-        clearCart: () => set({ items: [] }, false, "cart/clearCart"),
-
-        getItemCount: () => get().items.reduce((total, item) => total + item.quantity, 0),
-
-        getSubtotal: () =>
-          get().items.reduce((total, item) => total + item.unitPrice * item.quantity, 0),
-      }),
-      { name: "cart-storage" }
-    ),
-    { name: "CartStore" }
-  )
+      getItemCount: () => {
+        return get().items.reduce((count, item) => count + item.quantity, 0);
+      },
+    }),
+    {
+      name: "oims-cart",
+    },
+  ),
 );
 
 export default useCartStore;
