@@ -1,24 +1,22 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import AuthCard from '../components/AuthCard';
 import RegisterForm from '../components/RegisterForm';
-import useAuthStore from '../store/authStore';
 
-const Register = () => {
-  const navigate = useNavigate();
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const role = useAuthStore((state) => state.role);
+export function Register() {
+  return (
+    <AuthCard title="Create your account" subtitle="Register to start shopping.">
+      <RegisterForm />
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate(role === 'admin' ? '/admin' : '/', { replace: true });
-    }
-  }, [isAuthenticated, role, navigate]);
-
-  if (isAuthenticated) {
-    return null;
-  }
-
-  return <RegisterForm />;
-};
+      <div className="auth-card__links">
+        <p className="auth-card__link-text">
+          Already have an account?{' '}
+          <Link to="/login" className="auth-card__link">
+            Sign in
+          </Link>
+        </p>
+      </div>
+    </AuthCard>
+  );
+}
 
 export default Register;

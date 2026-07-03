@@ -889,12 +889,13 @@
     {
       "id": 13,
       "product_id": 13,
-      "product_name": "Indigo Nation",
+      "product_name": "Indigo Kurti",
       "unit_price": 3747.0,
-      "colour": "VOILET",
+      "colour": "BLUE",
       "brand": "Biba",
       "size": "XL",
-      "rating": 4
+      "rating": 4,
+      "image" : "https://images.jdmagicbox.com/quickquotes/images_main/biba-ethnic-wear-27-05-2021-1249-227039077-1yedj.jpg"
     },
     {
       "id": 14,
@@ -904,7 +905,8 @@
       "colour": "RED",
       "brand": "Global Desi",
       "size": "XL",
-      "rating": 3
+      "rating": 3,
+      "image": "https://m.media-amazon.com/images/I/61EFNn94CbL._AC_UY1100_.jpg"
     },
     {
       "id": 15,
@@ -914,7 +916,8 @@
       "colour": "GREEN",
       "brand": "Allen Solly",
       "size": "M",
-      "rating": 5
+      "rating": 5,
+      "image":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkpetcYn0JphpMWSKeYws6Ui32uxzuNTwaOU9VlWhFhMui_O90OANNvFA&s=10"
     },
     {
       "id": 16,
@@ -924,7 +927,8 @@
       "colour": "BROWN",
       "brand": "H & M",
       "size": "S",
-      "rating": 4
+      "rating": 4,
+      "image": "https://bananaclub.co.in/cdn/shop/files/DSC00838.jpg?v=1753166802&width=3560"
     },
     {
       "id": 17,
@@ -934,7 +938,8 @@
       "colour": "PINK",
       "brand": "H & M",
       "size": "XXL",
-      "rating": 3
+      "rating": 3,
+      "image": "https://imagescdn.allensolly.com/img/app/product/3/39735880-15421865.jpg"
     },
     {
       "id": 18,
@@ -944,7 +949,8 @@
       "colour": "RED",
       "brand": "H & M",
       "size": "XL",
-      "rating": 5
+      "rating": 5,
+      "image": "https://www.sainly.com/cdn/shop/products/sainly-apparel-accessories-26-men-elegant-red-pant-formal-wear-trouser-gift-for-men-red-trousers-groomsmen-gift-men-elegant-red-pant-red-dress-pant-emerald-dress-pants-sainly-mnpntred.png?v=1663251312"
     },
     {
       "id": 19,
@@ -954,7 +960,8 @@
       "colour": "GREEN",
       "brand": "Allen Solly",
       "size": "XXL",
-      "rating": 5
+      "rating": 5,
+      "image": "https://veirdo.in/cdn/shop/files/Artboard1-2026-01-23T181413.924.jpg?v=1769172316"
     },
     {
       "id": 20,
@@ -964,7 +971,8 @@
       "colour": "RED",
       "brand": "Manyavar",
       "size": "XL",
-      "rating": 3
+      "rating": 3,
+      "image": "https://laromaniofficial.com/cdn/shop/files/1654Red.jpg?v=1756903768"
     },
     {
       "id": 21,
@@ -974,7 +982,8 @@
       "colour": "GREEN",
       "brand": "Allen Solly",
       "size": "XXL",
-      "rating": 3
+      "rating": 3,
+      "image" : "https://rukminim2.flixcart.com/image/480/640/xif0q/jean/w/y/r/38-jeanlscargo-03-olivegrn-urbano-fashion-original-imahkrkh5hrrkzh3.jpeg?q=90"
     },
     {
       "id": 22,
@@ -984,7 +993,8 @@
       "colour": "BLACK",
       "brand": "Global Desi",
       "size": "S",
-      "rating": 4
+      "rating": 4,
+      "image": "https://pantproject.com/cdn/shop/files/DSC6905.jpg?v=1764013972&width=1080"
     },
     {
       "id": 23,
@@ -994,7 +1004,8 @@
       "colour": "YELLOW",
       "brand": "Manyavar",
       "size": "S",
-      "rating": 3
+      "rating": 3,
+      "image": "https://assets.myntassets.com/h_1440,q_75,w_1080/v1/assets/images/25167666/2023/10/20/31d36f57-4b8f-487e-b72c-f755f09754861697779535752-SHRESTHA-BY-VASTRAMAY-Men-Yellow-Geometric-Yoke-Design-Threa-7.jpg"
     },
     {
       "id": 24,
@@ -1004,7 +1015,8 @@
       "colour": "YELLOW",
       "brand": "Global Desi",
       "size": "XXL",
-      "rating": 5
+      "rating": 5,
+      "image": "https://www.wforwoman.com/cdn/shop/files/23AUW19962-122247_1.jpg?v=1721293640"
     },
     {
       "id": 25,
