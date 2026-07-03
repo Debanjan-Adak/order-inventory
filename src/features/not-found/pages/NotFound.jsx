@@ -1,38 +1,25 @@
 import { Link } from 'react-router-dom';
-import { MapPinOff } from 'lucide-react';
-import useAuthStore from '../../auth/store/authStore';
+import { Compass } from 'lucide-react';
+import { useAuthStore } from '@features/auth/store/authStore';
+import './NotFound.css';
 
-const NotFound = () => {
-  const role = useAuthStore((state) => state.role);
-  const homePath = role === 'admin' ? '/admin' : '/';
+export function NotFound() {
+  const user = useAuthStore((state) => state.user);
+  const isAdmin = user?.role === 'admin';
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center gap-6 bg-[var(--surface-base)] px-4 text-center">
-      <span className="pointer-events-none absolute select-none text-[160px] font-semibold leading-none text-[var(--text-muted)] opacity-10">
-        404
-      </span>
-
-      <div className="relative flex flex-col items-center gap-6">
-        <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[var(--surface-card)] border border-[var(--border-default)]">
-          <MapPinOff size={48} strokeWidth={1.75} className="text-[var(--text-muted)]" />
-        </div>
-
-        <div className="flex flex-col items-center gap-2">
-          <h1 className="text-[24px] font-semibold text-[var(--text-primary)]">Page not found</h1>
-          <p className="max-w-sm text-sm text-[var(--text-secondary)]">
-            The page you're looking for doesn't exist or has moved.
-          </p>
-        </div>
-
-        <Link
-          to={homePath}
-          className="flex h-10 items-center justify-center rounded-md bg-[var(--brand-accent)] px-5 text-sm font-medium text-white transition-transform duration-100 hover:brightness-[0.92] active:scale-[0.98]"
-        >
-          Back to Dashboard
-        </Link>
-      </div>
+    <div className="not-found-page">
+      <p className="not-found-page__watermark" aria-hidden="true">404</p>
+      <Compass className="not-found-page__icon" size={96} strokeWidth={1.25} aria-hidden="true" />
+      <h1 className="not-found-page__heading">Page not found</h1>
+      <p className="not-found-page__body">
+        The page you're looking for doesn't exist or has moved.
+      </p>
+      <Link to={isAdmin ? '/admin' : '/'} className="btn btn-primary not-found-page__action">
+        {isAdmin ? 'Back to Dashboard' : 'Back to Home'}
+      </Link>
     </div>
   );
-};
+}
 
 export default NotFound;
