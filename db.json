@@ -1009,122 +1009,135 @@
     {
       "id": 25,
       "product_id": 25,
-      "product_name": "Basics",
+      "product_name": "Kurta Pajama",
       "unit_price": 1808.0,
       "colour": "BLACK",
       "brand": "Manyavar",
       "size": "S",
-      "rating": 4
+      "rating": 4,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgEEZ7jTVKrTW94QuyLKcbfUtCtPowxwKv3__x9QHKkg&s=10"
     },
     {
       "id": 26,
       "product_id": 26,
-      "product_name": "Global desi",
+      "product_name": "Sweatshirt",
       "unit_price": 1146.0,
       "colour": "BROWN",
       "brand": "H & M",
       "size": "S",
-      "rating": 4
+      "rating": 4,
+      "image": "https://image.hm.com/assets/hm/52/bc/52bcadebd6bebe1d2c2228655f3f061be195d457.jpg?imwidth=768"
     },
     {
       "id": 27,
       "product_id": 27,
-      "product_name": "Mother earth",
+      "product_name": "Lahenga",
       "unit_price": 7758.0,
       "colour": "BROWN",
       "brand": "Biba",
       "size": "M",
-      "rating": 4
+      "rating": 4,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5vJpl0THeQG2siStrnp8KdZaQbnf7uDMFQsw_dOloZ6C3gFAP3xmO-Vye&s=10"
     },
     {
       "id": 28,
       "product_id": 28,
-      "product_name": "Biba",
+      "product_name": "Shirt",
       "unit_price": 6381.0,
       "colour": "WHITE",
       "brand": "H & M",
       "size": "M",
-      "rating": 5
+      "rating": 5,
+      "image": "https://assets.myntassets.com/h_1440,q_75,w_1080/v1/assets/images/10366231/2019/8/14/1097afd6-9e07-4655-9da9-9d3f245dfd171565786540157-HM-Men-White-Solid-Premium-Cotton-Poplin-Shirt-3791565786539-1.jpg"
     },
     {
       "id": 29,
       "product_id": 29,
-      "product_name": "Soch",
+      "product_name": "Sherwani",
       "unit_price": 7702.0,
-      "colour": "GREEN",
+      "colour": "BLUE",
       "brand": "Manyavar",
       "size": "XXL",
-      "rating": 5
+      "rating": 5,
+      "image": "https://manyavar.scene7.com/is/image/manyavar/ODES1038V-306-Dark+Blue-101_19-01-2021-20-56:650x900?dpr=on,2.625"
     },
     {
       "id": 30,
       "product_id": 30,
-      "product_name": "Aurelia",
+      "product_name": "T-shirts",
       "unit_price": 5555.0,
       "colour": "RED",
       "brand": "Allen Solly",
       "size": "S",
-      "rating": 3
+      "rating": 3,
+      "image": "https://imagescdn.allensolly.com/img/app/product/8/890208-10761935.jpg?auto=format&w=390"
     },
     {
       "id": 31,
       "product_id": 31,
-      "product_name": "W",
+      "product_name": "Pants",
       "unit_price": 7887.0,
       "colour": "WHITE",
       "brand": "H & M",
       "size": "XL",
-      "rating": 3
+      "rating": 3,
+      "image": "https://image.hm.com/assets/hm/b6/c1/b6c1366f2dd69c184bc2017d01e7042793cfd598.jpg?imwidth=2160"
     },
     {
       "id": 32,
       "product_id": 32,
-      "product_name": "Label Ritu Kumar",
+      "product_name": "Halter Top",
       "unit_price": 3807.0,
       "colour": "WHITE",
       "brand": "Zara",
       "size": "M",
-      "rating": 3
+      "rating": 3,
+      "image":"https://static.zara.net/assets/public/8333/bee0/f494468c8351/a2ef7e1115fa/02531225250-p/02531225250-p.jpg?ts=1774015561167&w=792&f=auto"
+
     },
     {
       "id": 33,
       "product_id": 33,
       "product_name": "AND",
       "unit_price": 4488.0,
-      "colour": "VOILET",
-      "brand": "The Label - Ritu Kumar",
+      "colour": "GREEN",
+      "brand": "One8",
       "size": "XXL",
-      "rating": 4
+      "rating": 4,
+      "image": "https://assets.myntassets.com/h_1440,q_75,w_1080/v1/assets/images/23088298/2023/6/15/3157f8bd-7e8f-4dd1-99b4-eb0496b925541686807993318-one8-Virat-Kohli-PUMA-Gold-Foil-Mens-T-Shirt-747168680799298-1.jpg"
     },
     {
       "id": 34,
       "product_id": 34,
-      "product_name": "Libas",
+      "product_name": "Blazer",
       "unit_price": 7391.0,
       "colour": "BROWN",
       "brand": "Zara",
       "size": "M",
-      "rating": 4
+      "rating": 4,
+      "image": "https://static.zara.net/assets/public/8d80/2c9c/61244a22bc63/b1e1fc3598a3/02329597700-p/02329597700-p.jpg?ts=1772202899399"
     },
     {
       "id": 35,
       "product_id": 35,
-      "product_name": "UCB",
+      "product_name": "Jackets",
       "unit_price": 1896.0,
-      "colour": "BROWN",
+      "colour": "BLACK",
       "brand": "Allen Solly",
       "size": "XL",
-      "rating": 3
+      "rating": 3,
+      "image":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvixgY3sB_pYk41FhWeCBTWMv981aAm8CSYXQy_uc90TtDsGft8NLjJPs&s=10"
     },
     {
       "id": 36,
       "product_id": 36,
-      "product_name": "Zink London",
+      "product_name": "Shirt",
       "unit_price": 2613.0,
       "colour": "WHITE",
       "brand": "Allen Solly",
       "size": "XXL",
-      "rating": 5
+      "rating": 5,
+      "image": "https://imagescdn.allensolly.com/img/app/product/3/39733191-15330091.jpg?auto=format&w=390"
     },
     {
       "id": 37,
