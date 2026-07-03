@@ -1,81 +1,107 @@
-import React, { useState, useMemo } from "react";
-import { StockBadge } from "./StockBadge";
+import { useState } from 'react';
+import { PackageSearch, TriangleAlert } from 'lucide-react';
+import { DataTable } from '@shared/components/common/DataTable';
+import { StockBadge, getStockTone } from './StockBadge';
+import { RestockModal } from './RestockModal';
+import './InventoryTable.css';
 
-export const InventoryTable = ({ inventory = [], isLoading, onRestock, onDelete }) => {
-  const [search, setSearch] = useState("");
-  const [storeFilter, setStoreFilter] = useState("ALL");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+const DEFAULT_EMPTY_STATE = {
+  icon: PackageSearch,
+  heading: 'No inventory records found',
+  body: 'Try a different store or search term.',
+};
 
-  const storeOptions = useMemo(() => ["ALL", ...new Set(inventory.map(i => i.store_id))], [inventory]);
+/**
+ *
+ * @param {object} props
+ * @param {Array<object>} props.rows - inventory rows `{..., product, store}`
+ * @param {boolean} [props.isLoading]
+ * @param {boolean} [props.isError]
+ * @param {() => void} [props.onRetry]
+ * @param {object} [props.emptyState]
+ */
+export function InventoryTable({ rows, isLoading, isError, onRetry, emptyState, pagination }) {
+  const [restockRow, setRestockRow] = useState(null);
 
-  const filtered = useMemo(() => {
-    return inventory.filter(item => {
-      const matchSearch = item.product_id?.toString().includes(search);
-      const matchStore = storeFilter === "ALL" || item.store_id?.toString() === storeFilter.toString();
-      return matchSearch && matchStore;
-    });
-  }, [inventory, search, storeFilter]);
-
-  const paginated = useMemo(() => 
-    filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
-   [filtered, currentPage]);
+  const columns = [
+    {
+      key: 'product',
+      header: 'Product',
+      render: (row) => (
+        <div className="inventory-table__product-cell">
+          <span
+            className="inventory-table__colour-dot"
+            style={{ background: row.product?.colour }}
+            aria-hidden="true"
+          />
+          <span className="inventory-table__product-name">
+            {row.product?.product_name ?? 'Unknown product'}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'store',
+      header: 'Store',
+      render: (row) => row.store?.store_name ?? 'Unknown store',
+    },
+    {
+      key: 'quantity',
+      header: 'Quantity',
+      render: (row) => {
+        const { status } = getStockTone(row.product_inventory);
+        return (
+          <div className="inventory-table__quantity-cell">
+            <span className="inventory-table__quantity-value">
+              {status === 'LOWSTOCK' ? (
+                <TriangleAlert
+                  size={14}
+                  strokeWidth={2}
+                  className="inventory-table__low-icon"
+                  aria-hidden="true"
+                />
+              ) : null}
+              {row.product_inventory}
+            </span>
+            <StockBadge quantity={row.product_inventory} />
+          </div>
+        );
+      },
+    },
+    {
+      key: 'actions',
+      header: '',
+      render: (row) => (
+        <button
+          type="button"
+          className="btn btn-outline-secondary btn-sm inventory-table__action"
+          onClick={() => setRestockRow(row)}
+        >
+          Adjust Stock
+        </button>
+      ),
+    },
+  ];
 
   return (
-    <div>
-      <div>
-        <h5>Global Inventory Matrix</h5>
-        
-        <div>
-          <input 
-            type="text" 
-            placeholder="Search SKU ID..."
-            value={search} 
-            onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} 
-          />
+    <>
+      <DataTable
+        columns={columns}
+        rows={rows}
+        isLoading={isLoading}
+        isError={isError}
+        onRetry={onRetry}
+        emptyState={emptyState ?? DEFAULT_EMPTY_STATE}
+        pagination={pagination}
+      />
 
-          <select value={storeFilter} onChange={e => { setStoreFilter(e.target.value); setCurrentPage(1); }}>
-            {storeOptions.map(store => (
-              <option key={store} value={store}>
-                {store === "ALL" ? "All Stores" : `Store #${store}`}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Inventory Bridge ID</th>
-            <th>Store Node ID</th>
-            <th>Product SKU Reference</th>
-            <th>Stock Level</th>
-            <th>Operations</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {isLoading ? (
-            <tr><td colSpan="5">Loading...</td></tr>
-          ) : paginated.length > 0 ? (
-            paginated.map(item => (
-              <tr key={item.id}>
-                <td>#{item.inventory_id}</td>
-                <td>Node #{item.store_id}</td>
-                <td>SKU_{item.product_id}</td>
-                <td><StockBadge quantity={item.product_inventory} /></td>
-                <td>
-                  <button onClick={() => onRestock(item)}>Manage Stock</button>
-                  <button onClick={() => onDelete(item.id)}>Delink</button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr><td colSpan="5">No inventory data available for current matrix.</td></tr>
-          )}
-        </tbody>
-      </table>
-    </div>
+      <RestockModal
+        isOpen={Boolean(restockRow)}
+        onClose={() => setRestockRow(null)}
+        inventoryRow={restockRow}
+      />
+    </>
   );
-};
+}
+
+export default InventoryTable;
