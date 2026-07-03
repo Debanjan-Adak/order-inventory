@@ -1,4 +1,3 @@
-// src/features/orders/pages/OrderCreate.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { OrderForm } from "../components/OrderForm";
@@ -38,19 +37,15 @@ export default function OrderCreate() {
   };
 
   return (
-    <div className={`container-fluid py-4 min-vh-100 
-    ${theme === "dark" ? "bg-dark text-light" : "bg-light text-dark"}`}>
+    <div>
+      <div>
+        <h3>Initiate Order Sequence Vector</h3>
+      </div>
 
-      <div className="container" style={{ maxWidth: "700px" }}>
-        <div className="mb-4">
-          <h3 className="fw-bold mb-1">Initiate Order Sequence Vector</h3>
-        </div>
-
-        <OrderForm 
+      <OrderForm 
         onSubmit={handleFormSubmission} 
         isSubmitting={createOrderMutation.isPending} 
-        theme={theme} />
-      </div>
+      />
     </div>
   );
 }
