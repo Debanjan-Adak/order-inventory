@@ -1,62 +1,37 @@
-import { ArrowUpRight, ArrowDownRight } from "lucide-react";
+import './StatsCard.css';
 
-function StatsCard({ icon: Icon, label, value, trend, isLoading }) {
-  const trendPositive = typeof trend === "number" && trend >= 0;
-  const trendNegative = typeof trend === "number" && trend < 0;
-
+export function StatsCard({
+  icon: Icon,
+  label,
+  value,
+  trend,
+  tone = 'neutral',
+  className = '',
+  style,
+}) {
   return (
-    <div className="card border h-100">
-      <div className="card-body d-flex flex-column gap-3">
-        <div className="d-flex align-items-center justify-content-between">
-          <span className="small text-secondary">{label}</span>
-          {Icon ? (
-            <div
-              className="d-flex align-items-center justify-content-center rounded"
-              style={{
-                height: "32px",
-                width: "32px",
-                backgroundColor: "rgba(79,70,229,0.1)",
-              }}
-            >
-              <Icon size={18} strokeWidth={1.75} style={{ color: "var(--brand-accent)" }} />
-            </div>
-          ) : null}
-        </div>
+    <div className={`stats-card ${className}`.trim()} style={style}>
+      <div className="stats-card__icon-wrap">
+        {Icon ? (
+          <Icon
+            className="stats-card__icon"
+            size={20}
+            strokeWidth={1.75}
+            aria-hidden="true"
+          />
+        ) : null}
+      </div>
 
-        {isLoading ? (
-          <div
-            className="placeholder-glow"
-            style={{ height: "32px", width: "96px" }}
-          >
-            <span className="placeholder col-12 h-100 rounded"></span>
-          </div>
-        ) : (
-          <div className="d-flex align-items-end gap-2">
-            <span
-              className="fs-3 fw-semibold"
-              style={{ fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}
-            >
-              {value}
-            </span>
-            {typeof trend === "number" ? (
-              <span
-                className="d-flex align-items-center gap-1 small fw-medium pb-1"
-                style={{
-                  fontVariantNumeric: "tabular-nums",
-                  color: trendPositive
-                    ? "var(--status-delivered)"
-                    : trendNegative
-                    ? "var(--status-cancelled)"
-                    : "var(--text-muted)",
-                }}
-              >
-                {trendPositive ? <ArrowUpRight size={14} /> : null}
-                {trendNegative ? <ArrowDownRight size={14} /> : null}
-                {Math.abs(trend)}%
-              </span>
-            ) : null}
-          </div>
-        )}
+      <div className="stats-card__body">
+        <p className="stats-card__label">{label}</p>
+
+        <p className={`stats-card__value stats-card__value--${tone} tabular-nums`}>
+          {value}
+        </p>
+
+        {trend ? (
+          <span className="stats-card__trend">{trend}</span>
+        ) : null}
       </div>
     </div>
   );
