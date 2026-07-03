@@ -1,13 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import useCartStore from "../store/cartStore";
 import CheckoutSummary from "../components/CheckoutSummary";
 import "./Checkout.css";
 
-// Placeholder — swap for Member 5's real ordersApi.createOrder once it
-// exists. Kept local so this page works standalone in the meantime.
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+const BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+
+async function getStores() {
+  const response = await fetch(`${BASE_URL}/stores`);
+  if (!response.ok) throw new Error("Could not load stores");
+  return response.json();
+}
 
 async function placeOrder(payload) {
   const response = await fetch(`${BASE_URL}/orders`, {
@@ -28,6 +34,16 @@ function Checkout() {
   const [storeId, setStoreId] = useState("");
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
+  const {
+    data: stores,
+    isLoading: storesLoading,
+    isError: storesError,
+  } = useQuery({
+    queryKey: ["stores"],
+    queryFn: getStores,
+    staleTime: 5 * 60_000,
+  });
+
   async function handlePlaceOrder() {
     if (!storeId) {
       toast.error("Select a store to fulfil this order.");
@@ -38,7 +54,10 @@ function Checkout() {
     try {
       const order = await placeOrder({
         store_id: storeId,
-        items: items.map((item) => ({ product_id: item.productId, quantity: item.quantity })),
+        items: items.map((item) => ({
+          product_id: item.productId,
+          quantity: item.quantity,
+        })),
       });
       toast.success("Order placed.");
       clearCart();
@@ -50,6 +69,10 @@ function Checkout() {
     }
   }
 
+  const selectedStore = stores?.find(
+    (store) => String(store.store_id) === String(storeId),
+  );
+
   return (
     <div className="checkout-page">
       <h1 className="page-title mb-4">Checkout</h1>
@@ -59,17 +82,61 @@ function Checkout() {
           <label htmlFor="store" className="form-label">
             Fulfil from store
           </label>
+
           <select
             id="store"
             className="form-select"
             value={storeId}
+            disabled={storesLoading || storesError}
             onChange={(event) => setStoreId(event.target.value)}
           >
-            <option value="">Select a store...</option>
-            {/* Replace with real stores once the stores endpoint is wired up */}
-            <option value="1">Store 1 — Downtown</option>
-            <option value="2">Store 2 — Warehouse District</option>
+            <option value="">
+              {storesLoading ? "Loading stores..." : "Select a store..."}
+            </option>
+            {stores?.map((store) => (
+              <option key={store.store_id} value={store.store_id}>
+                {store.store_name}
+                {store.physical_address ? "" : " (ships online)"}
+              </option>
+            ))}
           </select>
+
+          {storesError && (
+            <p className="checkout-store-error">
+              Couldn't load stores. Refresh the page and try again.
+            </p>
+          )}
+
+          {selectedStore && (
+            <div className="checkout-store-preview">
+              {selectedStore.physical_address ? (
+                <p className="checkout-store-address">
+                  {selectedStore.physical_address
+                    .split("\n")
+                    .map((line, index) => (
+                      <span key={index}>
+                        {line.trim()}
+                        <br />
+                      </span>
+                    ))}
+                </p>
+              ) : (
+                <p className="checkout-store-address">
+                  Ships directly to you — no pickup address for this store.
+                </p>
+              )}
+              {selectedStore.web_address && (
+                <a
+                  href={selectedStore.web_address}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="checkout-store-link"
+                >
+                  {selectedStore.web_address}
+                </a>
+              )}
+            </div>
+          )}
         </div>
 
         <CheckoutSummary

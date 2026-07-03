@@ -1,17 +1,11 @@
-import { BrowserRouter } from "react-router-dom";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter } from 'react-router-dom';
+import { queryClient } from './queryClient';
 
-import App from "./App";
-import { queryClient } from "./queryClient";
-
-function Providers() {
+export default function AppProviders({ children }) {
   return (
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>{children}</BrowserRouter>
+    </QueryClientProvider>
   );
 }
-
-export default Providers;

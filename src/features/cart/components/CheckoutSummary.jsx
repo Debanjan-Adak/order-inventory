@@ -7,8 +7,6 @@ function formatCurrency(amount) {
   }).format(amount);
 }
 
-// items/subtotal are read from the store by the Checkout page and passed
-// down here so this component stays presentation-only and easy to test.
 function CheckoutSummary({
   items,
   subtotal,
