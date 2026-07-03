@@ -1,48 +1,86 @@
+import { useNavigate } from "react-router-dom";
+import { useCartStore } from "../store/cartStore";
+import { useAuthStore } from "@features/auth/store/authStore";
+import { useCreateOrder } from "@features/orders/hooks/useOrderMutations";
+import { Loader } from "@shared/components/common/Loader";
+import formatCurrency from "@shared/utils/formatCurrency";
 import "./CheckoutSummary.css";
 
-function formatCurrency(amount) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-  }).format(amount);
-}
+const ONLINE_STORE_ID = 1;
 
-function CheckoutSummary({
-  items,
-  subtotal,
-  onPlaceOrder,
-  isPlacingOrder,
-  disabled,
-}) {
+export function CheckoutSummary() {
+  const navigate = useNavigate();
+  const items = useCartStore((state) => state.items);
+  const getSubtotal = useCartStore((state) => state.getSubtotal);
+  const clearCart = useCartStore((state) => state.clearCart);
+  const user = useAuthStore((state) => state.user);
+  const createOrder = useCreateOrder();
+
+  const subtotal = getSubtotal();
+  const total = subtotal;
+
+  async function handlePlaceOrder() {
+    try {
+      const createdOrder = await createOrder.mutateAsync({
+        customerId: user.id,
+        storeId: ONLINE_STORE_ID,
+        items: items.map((item) => ({
+          productId: item.productId,
+          unitPrice: item.unitPrice,
+          quantity: item.quantity,
+        })),
+      });
+      navigate(`/my-orders/${createdOrder.id}`);
+      setTimeout(() => clearCart(), 0);
+    } catch {}
+  }
+
   return (
-    <aside className="checkout-summary">
-      <h3 className="checkout-summary-title">Review order</h3>
+    <div className="checkout-summary">
+      <h2 className="checkout-summary__heading">Review Your Order</h2>
 
-      <ul className="checkout-summary-list">
+      <ul className="checkout-summary__list">
         {items.map((item) => (
-          <li key={item.productId} className="checkout-summary-item">
-            <span className="checkout-summary-item-name">
-              {item.name} <span className="text-muted">x{item.quantity}</span>
+          <li key={item.productId} className="checkout-summary__item">
+            <span
+              className="checkout-summary__colour-dot"
+              style={{ background: item.colour }}
+              aria-hidden="true"
+            />
+            <span className="checkout-summary__item-name">
+              {item.productName}
             </span>
-            <span>{formatCurrency(item.unitPrice * item.quantity)}</span>
+            <span className="checkout-summary__item-qty tabular-nums">
+              x{item.quantity}
+            </span>
+            <span className="checkout-summary__item-total tabular-nums">
+              {formatCurrency(item.unitPrice * item.quantity)}
+            </span>
           </li>
         ))}
       </ul>
 
-      <div className="checkout-summary-total">
+      <div className="checkout-summary__divider" />
+
+      <div className="checkout-summary__row">
+        <span>Subtotal</span>
+        <span className="tabular-nums">{formatCurrency(subtotal)}</span>
+      </div>
+      <div className="checkout-summary__row checkout-summary__row--total">
         <span>Total</span>
-        <span>{formatCurrency(subtotal)}</span>
+        <span className="tabular-nums">{formatCurrency(total)}</span>
       </div>
 
       <button
         type="button"
-        className="btn btn-primary w-100 mt-3"
-        disabled={disabled || isPlacingOrder}
-        onClick={onPlaceOrder}
+        className="btn btn-primary checkout-summary__place-order-btn"
+        onClick={handlePlaceOrder}
+        disabled={createOrder.isPending}
       >
-        {isPlacingOrder ? "Placing order..." : "Place order"}
+        {createOrder.isPending ? <Loader size="sm" /> : null}
+        Place Order
       </button>
-    </aside>
+    </div>
   );
 }
 

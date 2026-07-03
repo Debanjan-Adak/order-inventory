@@ -1,60 +1,57 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-import {
-  createCustomer,
-  updateCustomer,
-  deleteCustomer,
-  setCustomerBlockedStatus,
-} from "../api/customerApi";
+import { useToastStore } from "@stores/toastStore";
+import { customerApi } from "../api/customerApi";
+import { CUSTOMERS_QUERY_KEY } from "./useCustomers";
 
-// Every mutation below invalidates the "customers" query key on success so
-// the table and any open detail page pick up fresh data automatically.
+const SAVE_ERROR_MESSAGE = "Couldn't save customer. Please try again.";
 
 export function useCreateCustomer() {
   const queryClient = useQueryClient();
+  const addToast = useToastStore((state) => state.addToast);
+
   return useMutation({
-    mutationFn: (payload) => createCustomer(payload),
+    mutationFn: (data) => customerApi.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["customers"] });
-      toast.success("Customer added.");
+      queryClient.invalidateQueries({ queryKey: CUSTOMERS_QUERY_KEY });
+      addToast({ type: "success", message: "Customer added." });
     },
-    onError: () => toast.error("Couldn't save customer. Please try again."),
+    onError: () => {
+      addToast({ type: "error", message: SAVE_ERROR_MESSAGE });
+    },
   });
 }
 
 export function useUpdateCustomer() {
   const queryClient = useQueryClient();
+  const addToast = useToastStore((state) => state.addToast);
+
   return useMutation({
-    mutationFn: ({ customerId, payload }) => updateCustomer(customerId, payload),
+    mutationFn: (data) => customerApi.update(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["customers"] });
-      toast.success("Customer updated.");
+      queryClient.invalidateQueries({ queryKey: CUSTOMERS_QUERY_KEY });
+      addToast({ type: "success", message: "Customer updated." });
     },
-    onError: () => toast.error("Couldn't save customer. Please try again."),
+    onError: () => {
+      addToast({ type: "error", message: SAVE_ERROR_MESSAGE });
+    },
   });
 }
 
 export function useDeleteCustomer() {
   const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (customerId) => deleteCustomer(customerId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["customers"] });
-      toast.success("Customer deleted.");
-    },
-    onError: () => toast.error("Couldn't delete customer. Please try again."),
-  });
-}
+  const addToast = useToastStore((state) => state.addToast);
 
-// Shared by both ban and unban — the modal decides which boolean to send.
-export function useSetCustomerBlockedStatus() {
-  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ customerId, isblocked }) => setCustomerBlockedStatus(customerId, isblocked),
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["customers"] });
-      toast.success(variables.isblocked ? "Customer blocked." : "Customer unblocked.");
+    mutationFn: (customerId) => customerApi.remove(customerId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: CUSTOMERS_QUERY_KEY });
+      addToast({ type: "success", message: "Customer deleted." });
     },
-    onError: () => toast.error("Couldn't update customer status. Please try again."),
+    onError: () => {
+      addToast({
+        type: "error",
+        message: "Couldn't delete customer. Please try again.",
+      });
+    },
   });
 }
