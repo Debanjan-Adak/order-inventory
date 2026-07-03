@@ -6,10 +6,6 @@ import { InventoryForm } from './InventoryForm';
 import './RestockModal.css';
 
 /**
- * Restock/adjust-stock modal. When `inventoryRow` is provided it adjusts
- * that row's quantity; when it's `null` it's a fresh "adjust stock" flow
- * where the admin must first pick a product + store (no inventory record
- * exists for that combo yet), then InventoryForm POSTs a new record.
  *
  * @param {object} props
  * @param {boolean} props.isOpen

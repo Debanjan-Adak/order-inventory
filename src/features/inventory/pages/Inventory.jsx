@@ -10,9 +10,6 @@ import { InventoryTable } from '../components/InventoryTable';
 import { RestockModal } from '../components/RestockModal';
 import './Inventory.css';
 
-/**
- * Admin inventory page — route `/admin/inventory`.
- */
 export function Inventory() {
   const filters = useFiltersStore((state) => state.inventory);
   const setFilters = useFiltersStore((state) => state.setFilters);
@@ -29,10 +26,6 @@ export function Inventory() {
     refetch,
   } = useInventory(selectedStoreId);
 
-  // Products have no real "category" field in this schema — the control is
-  // labeled "Category" per the design doc but is populated from (and
-  // filters by) the product `brand` field instead, same interpretation the
-  // server uses for GET /inventory/category/:category.
   const categoryOptions = useMemo(() => {
     const brands = new Set(products.map((product) => product.brand).filter(Boolean));
     return Array.from(brands).sort();
