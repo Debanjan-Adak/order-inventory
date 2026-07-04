@@ -34,6 +34,14 @@ const TOOLTIP_STYLE = {
   color: 'var(--color-text-primary)',
 };
 
+const TOOLTIP_ITEM_STYLE = {
+  color: 'var(--color-text-primary)',
+};
+
+const TOOLTIP_LABEL_STYLE = {
+  color: 'var(--color-text-primary)',
+};
+
 const LEGEND_STYLE = {
   fontSize: 'var(--font-size-caption)',
   color: 'var(--color-text-secondary)',
@@ -59,19 +67,27 @@ export function DashboardChart() {
   const shipmentStatusQuery = useShipmentStatusCounts();
   const { isAnimationActive, onAnimationStart } = useAnimateOnce();
 
-  const orderData = (orderStatusQuery.data ?? []).map((row) => {
+  const orderDataMap = {};
+  (orderStatusQuery.data ?? []).forEach((row) => {
     const display = ORDER_STATUS_DISPLAY_MAP[row.status] || {
       key: row.status,
       label: row.status,
     };
+    const key = display.key;
 
-    return {
-      key: display.key,
-      name: display.label,
-      value: row.count,
-      color: STATUS_COLORS[display.key] || 'var(--color-text-muted)',
-    };
+    if (!orderDataMap[key]) {
+      orderDataMap[key] = {
+        key,
+        name: display.label,
+        value: 0,
+        color: STATUS_COLORS[key] || 'var(--color-text-muted)',
+      };
+    }
+
+    orderDataMap[key].value += row.count;
   });
+
+  const orderData = Object.values(orderDataMap);
 
   const shipmentData = (shipmentStatusQuery.data ?? []).map((row) => ({
     name: row.status,
@@ -117,7 +133,11 @@ export function DashboardChart() {
                 ))}
               </Pie>
 
-              <RechartsTooltip contentStyle={TOOLTIP_STYLE} />
+              <RechartsTooltip
+                contentStyle={TOOLTIP_STYLE}
+                itemStyle={TOOLTIP_ITEM_STYLE}
+                labelStyle={TOOLTIP_LABEL_STYLE}
+              />
 
               <Legend
                 verticalAlign="bottom"
@@ -155,22 +175,14 @@ export function DashboardChart() {
 
               <XAxis
                 dataKey="name"
-                tick={{
-                  fontSize: 12,
-                  fill: 'var(--color-text-muted)',
-                }}
-                axisLine={{
-                  stroke: 'var(--color-border-default)',
-                }}
+                tick={{ fontSize: 12, fill: 'var(--color-text-muted)' }}
+                axisLine={{ stroke: 'var(--color-border-default)' }}
                 tickLine={false}
               />
 
               <YAxis
                 allowDecimals={false}
-                tick={{
-                  fontSize: 12,
-                  fill: 'var(--color-text-muted)',
-                }}
+                tick={{ fontSize: 12, fill: 'var(--color-text-muted)' }}
                 axisLine={false}
                 tickLine={false}
               />
@@ -178,6 +190,8 @@ export function DashboardChart() {
               <RechartsTooltip
                 cursor={{ fill: 'var(--color-surface-base)' }}
                 contentStyle={TOOLTIP_STYLE}
+                itemStyle={TOOLTIP_ITEM_STYLE}
+                labelStyle={TOOLTIP_LABEL_STYLE}
               />
 
               <Bar
@@ -187,10 +201,7 @@ export function DashboardChart() {
                 animationDuration={500}
               >
                 {shipmentData.map((entry) => (
-                  <Cell
-                    key={entry.name}
-                    fill={entry.color}
-                  />
+                  <Cell key={entry.name} fill={entry.color} />
                 ))}
               </Bar>
             </BarChart>

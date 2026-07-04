@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Minus, Plus, PackageX, Star } from 'lucide-react';
 import formatCurrency from '@shared/utils/formatCurrency';
 import { EmptyState } from '@shared/components/common/EmptyState';
 import { Loader } from '@shared/components/common/Loader';
 import { useCartStore } from '@features/cart/store/cartStore';
+import { useAuthStore } from '@features/auth/store/authStore';
 import { useToastStore } from '@stores/toastStore';
 import { useProducts } from '../hooks/useProducts';
 import { ProductImage } from '../components/ProductImage';
@@ -14,14 +15,14 @@ const MAX_QUANTITY = 20;
 
 export function ProductDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data: products, isLoading } = useProducts();
   const addItem = useCartStore((state) => state.addItem);
   const addToast = useToastStore((state) => state.addToast);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [quantity, setQuantity] = useState(1);
 
-  const product = (products ?? []).find(
-    (item) => String(item.id) === id
-  );
+  const product = (products ?? []).find((item) => String(item.id) === id);
 
   if (isLoading) {
     return (
@@ -46,18 +47,24 @@ export function ProductDetails() {
   }
 
   function decrement() {
-    setQuantity((current) =>
-      Math.max(1, current - 1)
-    );
+    setQuantity((current) => Math.max(1, current - 1));
   }
 
   function increment() {
-    setQuantity((current) =>
-      Math.min(MAX_QUANTITY, current + 1)
-    );
+    setQuantity((current) => Math.min(MAX_QUANTITY, current + 1));
   }
 
   function handleAddToCart() {
+    if (!isAuthenticated) {
+      addToast({
+        type: 'error',
+        message: 'Please log in to add items to your cart.',
+      });
+
+      navigate('/login');
+      return;
+    }
+
     addItem(
       {
         productId: product.id,
@@ -70,9 +77,7 @@ export function ProductDetails() {
 
     addToast({
       type: 'success',
-      message: `Added ${quantity} ${
-        quantity > 1 ? 'items' : 'item'
-      } to cart!`,
+      message: `Added ${quantity} ${quantity > 1 ? 'items' : 'item'} to cart!`,
     });
   }
 
@@ -80,10 +85,7 @@ export function ProductDetails() {
 
   return (
     <div className="product-details">
-      <Link
-        to="/"
-        className="product-details__back-link"
-      >
+      <Link to="/" className="product-details__back-link">
         &larr; Back to Products
       </Link>
 
@@ -153,10 +155,7 @@ export function ProductDetails() {
                 disabled={quantity <= 1}
                 aria-label="Decrease quantity"
               >
-                <Minus
-                  size={14}
-                  strokeWidth={2}
-                />
+                <Minus size={14} strokeWidth={2} />
               </button>
 
               <span className="product-details__stepper-value tabular-nums">
@@ -170,10 +169,7 @@ export function ProductDetails() {
                 disabled={quantity >= MAX_QUANTITY}
                 aria-label="Increase quantity"
               >
-                <Plus
-                  size={14}
-                  strokeWidth={2}
-                />
+                <Plus size={14} strokeWidth={2} />
               </button>
             </div>
           </div>

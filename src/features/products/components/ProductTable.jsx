@@ -1,8 +1,14 @@
-import { Pencil, Trash2, Star } from 'lucide-react';
+import { Pencil, Trash2, Star, PackageSearch } from 'lucide-react';
 import { DataTable } from '@shared/components/common/DataTable';
 import formatCurrency from '@shared/utils/formatCurrency';
 import { ProductImage } from './ProductImage';
 import './ProductTable.css';
+
+const DEFAULT_EMPTY_STATE = {
+  icon: PackageSearch,
+  heading: 'No products found',
+  body: 'Try adjusting your filters or search query.',
+};
 
 export function ProductTable({
   rows,
