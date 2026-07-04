@@ -1,125 +1,201 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Star, Pencil, Trash2 } from "lucide-react";
-import ProductImage from "./ProductImage";
-import { formatCurrency } from "../../../shared/utils/formatCurrency";
-import useCartStore from "../../cart/store/cartStore";
-import useAuthStore from "../../auth/store/authStore";
+import { useNavigate } from 'react-router-dom';
+import { Star, Pencil, Trash2 } from 'lucide-react';
+import formatCurrency from '@shared/utils/formatCurrency';
+import { useCartStore } from '@features/cart/store/cartStore';
+import { useToastStore } from '@stores/toastStore';
+import { ProductImage } from './ProductImage';
+import './ProductCard.css';
 
-function RatingStars({ rating }) {
-  const stars = [1, 2, 3, 4, 5];
+function StarRating({ rating }) {
+  const numericRating = Number(rating) || 0;
+  const fullStars = Math.floor(numericRating);
+  const hasHalfStar = numericRating - fullStars >= 0.5;
+
   return (
-    <div className="d-flex align-items-center gap-1">
-      {stars.map((value) => (
-        <Star
-          key={value}
-          size={14}
-          strokeWidth={1.75}
-          className={value <= rating ? "text-warning" : "text-secondary"}
-          fill={value <= rating ? "currentColor" : "none"}
-        />
-      ))}
+    <div
+      className="product-card__rating"
+      aria-label={`Rated ${numericRating} out of 5`}
+    >
+      {Array.from({ length: 5 }, (_, index) => {
+        const starNumber = index + 1;
+
+        if (starNumber <= fullStars) {
+          return (
+            <Star
+              key={index}
+              size={14}
+              strokeWidth={2}
+              className="product-card__star product-card__star--filled"
+            />
+          );
+        }
+
+        if (starNumber === fullStars + 1 && hasHalfStar) {
+          return (
+            <span
+              key={index}
+              className="product-card__star-half-wrapper"
+            >
+              <Star
+                size={14}
+                strokeWidth={2}
+                className="product-card__star"
+              />
+              <span className="product-card__star-half-overlay">
+                <Star
+                  size={14}
+                  strokeWidth={2}
+                  className="product-card__star product-card__star--filled"
+                />
+              </span>
+            </span>
+          );
+        }
+
+        return (
+          <Star
+            key={index}
+            size={14}
+            strokeWidth={2}
+            className="product-card__star"
+          />
+        );
+      })}
     </div>
   );
 }
 
-function ProductCard({ product, onEdit, onDelete }) {
-  const [hovered, setHovered] = useState(false);
+export function ProductCard({
+  product,
+  mode = 'customer',
+  onAddToCart,
+  onEdit,
+  onDelete,
+}) {
+  const navigate = useNavigate();
   const addItem = useCartStore((state) => state.addItem);
-  const role = useAuthStore((state) => state.role);
-  const showAddToCart = role !== "admin";
+  const addToast = useToastStore((state) => state.addToast);
+
+  function goToDetails() {
+    navigate(`/products/${product.id}`);
+  }
+
+  function handleAddToCart(event) {
+    event.stopPropagation();
+
+    if (onAddToCart) {
+      onAddToCart();
+      return;
+    }
+
+    addItem(
+      {
+        productId: product.id,
+        productName: product.product_name,
+        unitPrice: product.unit_price,
+        colour: product.colour,
+      },
+      1
+    );
+
+    addToast({
+      type: 'success',
+      message: `Added ${product.product_name} to cart!`,
+    });
+  }
+
+  function handleEdit(event) {
+    event.stopPropagation();
+    onEdit?.();
+  }
+
+  function handleDelete(event) {
+    event.stopPropagation();
+    onDelete?.();
+  }
 
   return (
-    <div
-      className="card border h-100"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        transform: hovered ? "translateY(-1px)" : "translateY(0)",
-        borderColor: hovered ? "var(--border-default)" : undefined,
-        transition: "transform 150ms ease-out",
-      }}
-    >
-      <div className="position-relative p-3 pb-0">
-        <ProductImage colour={product.colour} size="card" />
-
-        {(onEdit || onDelete) && (
-          <div
-            className="position-absolute top-0 end-0 mt-2 me-2 d-flex gap-1"
-            style={{
-              opacity: hovered ? 1 : 0,
-              transition: "opacity 100ms ease-out",
-            }}
+    <div className={`product-card product-card--${mode}`}>
+      {mode === 'admin' ? (
+        <div className="product-card__admin-actions">
+          <button
+            type="button"
+            className="btn btn-outline-secondary product-card__admin-action"
+            onClick={handleEdit}
+            aria-label={`Edit ${product.product_name}`}
+            title="Edit"
           >
-            {onEdit ? (
-              <button
-                type="button"
-                className="btn btn-sm btn-light border rounded-circle d-flex align-items-center justify-content-center p-1"
-                aria-label="Edit product"
-                onClick={() => onEdit(product)}
-              >
-                <Pencil size={14} strokeWidth={1.75} />
-              </button>
-            ) : null}
-            {onDelete ? (
-              <button
-                type="button"
-                className="btn btn-sm btn-light border rounded-circle d-flex align-items-center justify-content-center p-1"
-                aria-label="Delete product"
-                onClick={() => onDelete(product)}
-              >
-                <Trash2 size={14} strokeWidth={1.75} className="text-danger" />
-              </button>
-            ) : null}
-          </div>
-        )}
-      </div>
+            <Pencil size={14} strokeWidth={2} />
+          </button>
 
-      <div className="card-body d-flex flex-column gap-2">
-        <Link
-          to={`/products/${product.product_name}`}
-          className="text-decoration-none"
-          style={{ color: "var(--text-primary)" }}
-        >
-          <span className="fw-semibold">{product.product_name}</span>
-        </Link>
+          <button
+            type="button"
+            className="btn btn-outline-secondary product-card__admin-action product-card__admin-action--danger"
+            onClick={handleDelete}
+            aria-label={`Delete ${product.product_name}`}
+            title="Delete"
+          >
+            <Trash2 size={14} strokeWidth={2} />
+          </button>
+        </div>
+      ) : null}
 
-        <div className="d-flex align-items-center justify-content-between">
-          <span className="badge rounded-pill text-bg-light border">
+      <div
+        className="product-card__clickable"
+        onClick={mode === 'customer' ? goToDetails : undefined}
+        role={mode === 'customer' ? 'button' : undefined}
+        tabIndex={mode === 'customer' ? 0 : undefined}
+        onKeyDown={
+          mode === 'customer'
+            ? (event) => {
+                if (
+                  event.key === 'Enter' ||
+                  event.key === ' '
+                ) {
+                  event.preventDefault();
+                  goToDetails();
+                }
+              }
+            : undefined
+        }
+      >
+        <ProductImage
+          image={product.image}
+          colour={product.colour}
+          alt={product.product_name}
+          variant="card"
+        />
+
+        <div className="product-card__body">
+          <p className="product-card__name">
+            {product.product_name}
+          </p>
+
+          <span className="product-card__brand-badge">
             {product.brand}
           </span>
-          <RatingStars rating={product.rating} />
-        </div>
 
-        <div className="d-flex align-items-center justify-content-between mt-auto">
-          <span
-            className="fs-4 fw-bold"
-            style={{ fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}
-          >
-            {formatCurrency(product.unit_price)}
-          </span>
+          {mode === 'customer' ? (
+            <>
+              <p className="product-card__price tabular-nums">
+                {formatCurrency(product.unit_price)}
+              </p>
 
-          {showAddToCart && (
-            <button
-              type="button"
-              className="btn btn-primary btn-sm px-2 py-1"
-              style={{ backgroundColor: "var(--brand-accent)", borderColor: "var(--brand-accent)" }}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                addItem({
-                  id: product.id || product.product_id,
-                  name: product.product_name,
-                  unitPrice: product.unit_price,
-                  colour: product.colour
-                });
-              }}
-            >
-              Add to Cart
-            </button>
-          )}
+              <StarRating rating={product.rating} />
+            </>
+          ) : null}
         </div>
       </div>
+
+      {mode === 'customer' ? (
+        <button
+          type="button"
+          className="btn btn-primary product-card__add-btn"
+          onClick={handleAddToCart}
+        >
+          Add to Cart
+        </button>
+      ) : null}
     </div>
   );
 }

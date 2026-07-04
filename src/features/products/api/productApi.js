@@ -1,58 +1,39 @@
-import axiosClient from "../../../shared/api/axios";
+import api from '@shared/api/axios';
+import { endpoints } from '@shared/api/endpoints';
 
-const BASE_URL = "/products";
+export const productApi = {
+  getAll: () =>
+    api.get(endpoints.products.all()).then((res) => res.data),
 
-export const fetchProducts = async () => {
-  const response = await axiosClient.get(BASE_URL);
-  return response.data;
+  search: (name) =>
+    productApi.getAll().then((products) =>
+      products.filter((p) =>
+        String(p.product_name)
+          .toLowerCase()
+          .includes(String(name).toLowerCase())
+      )
+    ),
+
+  byBrand: (brand) =>
+    api.get(endpoints.products.byBrand(brand)).then((res) => res.data),
+
+  byColour: (colour) =>
+    api.get(endpoints.products.byColour(colour)).then((res) => res.data),
+
+  byPriceRange: (min, max) =>
+    api.get(endpoints.products.priceRange(min, max)).then((res) => res.data),
+
+  sorted: (field) =>
+    api.get(endpoints.products.sort(field)).then((res) => res.data),
+
+  create: (data) =>
+    api.post(endpoints.products.create(), data).then((res) => res.data),
+
+  update: ({ id, ...fields }) =>
+    api.patch(endpoints.products.update(id), fields).then((res) => res.data),
+
+  remove: (id) =>
+    api.delete(endpoints.products.remove(id)).then((res) => res.data),
 };
 
-export const fetchProductByName = async (productName) => {
-  const response = await axiosClient.get(`${BASE_URL}`, {
-    params: { product_name: productName }
-  });
-  return response.data;
-};
-
-export const fetchProductsByBrand = async (brand) => {
-  const response = await axiosClient.get(`${BASE_URL}`, {
-    params: { brand }
-  });
-  return response.data;
-};
-
-export const fetchProductsByColour = async (colour) => {
-  const response = await axiosClient.get(`${BASE_URL}`, {
-    params: { colour }
-  });
-  return response.data;
-};
-
-export const fetchProductsSorted = async (field) => {
-  const response = await axiosClient.get(`${BASE_URL}`, {
-    params: { _sort: field },
-  });
-  return response.data;
-};
-
-export const fetchProductsByPriceRange = async (min, max) => {
-  const response = await axiosClient.get(`${BASE_URL}`, {
-    params: { unit_price_gte: min, unit_price_lte: max },
-  });
-  return response.data;
-};
-
-export const createProduct = async (payload) => {
-  const response = await axiosClient.post(BASE_URL, payload);
-  return response.data;
-};
-
-export const updateProduct = async (payload) => {
-  const response = await axiosClient.put(`${BASE_URL}/${payload.id}`, payload);
-  return response.data;
-};
-
-export const deleteProduct = async (id) => {
-  const response = await axiosClient.delete(`${BASE_URL}/${id}`);
-  return response.data;
-};
+export default productApi;
