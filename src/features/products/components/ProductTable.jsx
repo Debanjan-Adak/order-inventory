@@ -1,117 +1,112 @@
-import { useMemo } from "react";
-import { Link } from "react-router-dom";
-import { Pencil, Trash2 } from "lucide-react";
-import ProductImage from "./ProductImage";
-import { formatCurrency } from "../../../shared/utils/formatCurrency";
-import DataTable from "../../../shared/components/common/DataTable";
+import { Pencil, Trash2, Star } from 'lucide-react';
+import { DataTable } from '@shared/components/common/DataTable';
+import formatCurrency from '@shared/utils/formatCurrency';
+import { ProductImage } from './ProductImage';
+import './ProductTable.css';
 
-function ProductTable({ products, isLoading, onEdit, onDelete }) {
+export function ProductTable({
+  rows,
+  isLoading,
+  isError,
+  onRetry,
+  emptyState,
+  onEdit,
+  onDelete,
+  pagination,
+}) {
   const columns = [
     {
-      key: "image",
-      header: "",
-      render: (product) => <ProductImage colour={product.colour} size="table" />,
-    },
-    {
-      key: "product_name",
-      header: "Name",
-      render: (product) => (
-        <Link
-          to={`/products/${product.product_name}`}
-          className="text-decoration-none fw-medium"
-          style={{ color: "var(--text-primary)" }}
-        >
-          {product.product_name}
-        </Link>
+      key: 'product_name',
+      header: 'Product',
+      render: (row) => (
+        <div className="product-table__name-cell">
+          <ProductImage
+            image={row.image}
+            colour={row.colour}
+            alt={row.product_name}
+            variant="avatar"
+          />
+          <span className="product-table__name">
+            {row.product_name}
+          </span>
+        </div>
       ),
     },
     {
-      key: "brand",
-      header: "Brand",
-      render: (product) => (
-        <span className="badge rounded-pill text-bg-light border">
-          {product.brand}
+      key: 'brand',
+      header: 'Brand',
+    },
+    {
+      key: 'colour',
+      header: 'Colour',
+    },
+    {
+      key: 'size',
+      header: 'Size',
+    },
+    {
+      key: 'unit_price',
+      header: 'Price',
+      render: (row) => (
+        <span className="product-table__price tabular-nums">
+          {formatCurrency(row.unit_price)}
         </span>
       ),
     },
     {
-      key: "colour",
-      header: "Colour",
-      render: (product) => (
-        <span style={{ color: "var(--text-secondary)" }}>{product.colour}</span>
-      ),
-    },
-    {
-      key: "size",
-      header: "Size",
-      render: (product) => (
-        <span style={{ color: "var(--text-secondary)" }}>{product.size}</span>
-      ),
-    },
-    {
-      key: "rating",
-      header: "Rating",
-      render: (product) => (
-        <span style={{ fontVariantNumeric: "tabular-nums" }}>{product.rating}</span>
-      ),
-    },
-    {
-      key: "unit_price",
-      header: "Price",
-      render: (product) => (
-        <span
-          className="fw-medium"
-          style={{ fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}
-        >
-          {formatCurrency(product.unit_price)}
+      key: 'rating',
+      header: 'Rating',
+      render: (row) => (
+        <span className="product-table__rating">
+          <Star
+            size={14}
+            strokeWidth={2}
+            className="product-table__rating-star"
+          />
+          {Number(row.rating) || 0}
         </span>
       ),
     },
     {
-      key: "actions",
-      header: "",
-      render: (product) => (
-        <div className="d-flex gap-1 justify-content-end">
+      key: 'actions',
+      header: '',
+      width: 96,
+      render: (row) => (
+        <div className="product-table__actions">
           <button
             type="button"
-            className="btn btn-sm btn-light border rounded-circle d-flex align-items-center justify-content-center p-1"
-            aria-label="Edit product"
-            onClick={() => onEdit(product)}
+            className="btn btn-outline-secondary product-table__action"
+            onClick={() => onEdit?.(row)}
+            aria-label={`Edit ${row.product_name}`}
+            title="Edit"
           >
-            <Pencil size={14} strokeWidth={1.75} />
+            <Pencil size={14} strokeWidth={2} />
           </button>
+
           <button
             type="button"
-            className="btn btn-sm btn-light border rounded-circle d-flex align-items-center justify-content-center p-1"
-            aria-label="Delete product"
-            onClick={() => onDelete(product)}
+            className="btn btn-outline-secondary product-table__action product-table__action--danger"
+            onClick={() => onDelete?.(row)}
+            aria-label={`Delete ${row.product_name}`}
+            title="Delete"
           >
-            <Trash2 size={14} strokeWidth={1.75} className="text-danger" />
+            <Trash2 size={14} strokeWidth={2} />
           </button>
         </div>
       ),
     },
   ];
 
-  const visibleColumns = useMemo(() => {
-    const cols = columns.map(col => ({
-      ...col,
-      accessor: col.accessor || col.key
-    }));
-    if (!onEdit && !onDelete) {
-      return cols.filter((col) => col.accessor !== "actions");
-    }
-    return cols;
-  }, [onEdit, onDelete]);
-
   return (
     <DataTable
-      columns={visibleColumns}
-      data={products}
-      loading={isLoading}
-      rowKey={(product) => product.product_id}
-      emptyTitle="No products yet"
-      emptyMessage="Add a product to start building your catalog."
+      columns={columns}
+      rows={rows}
+      isLoading={isLoading}
+      isError={isError}
+      onRetry={onRetry}
+      emptyState={emptyState ?? DEFAULT_EMPTY_STATE}
+      pagination={pagination}
+      getRowKey={(row) => row.id}
     />
   );
 }
