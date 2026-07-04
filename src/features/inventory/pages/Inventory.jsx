@@ -1,45 +1,135 @@
-import React, { useState } from "react";
+import { useMemo, useState } from 'react';
+import { Plus } from 'lucide-react';
+import { useFiltersStore } from '@stores/filtersStore';
+import { useStores } from '@features/stores/hooks/useStores';
+import { useProducts } from '@features/products/hooks/useProducts';
+import { LOW_STOCK_THRESHOLD } from '@shared/utils/constants';
+import { usePagination } from '@shared/hooks/usePagination';
+import { useInventory } from '../hooks/useInventory';
+import { InventoryTable } from '../components/InventoryTable';
+import { RestockModal } from '../components/RestockModal';
+import './Inventory.css';
 
 export function Inventory() {
-  const [inventory, setInventory] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const filters = useFiltersStore((state) => state.inventory);
+  const setFilters = useFiltersStore((state) => state.setFilters);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+
+  const { data: stores = [] } = useStores();
+  const { data: products = [] } = useProducts();
+
+  const selectedStoreId = filters.storeId ? Number(filters.storeId) : undefined;
+  const {
+    data: inventoryRows = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useInventory(selectedStoreId);
+
+  const categoryOptions = useMemo(() => {
+    const brands = new Set(products.map((product) => product.brand).filter(Boolean));
+    return Array.from(brands).sort();
+  }, [products]);
+
+  const filteredRows = useMemo(() => {
+    return inventoryRows.filter((row) => {
+      if (filters.category && row.product?.brand !== filters.category) {
+        return false;
+      }
+      if (filters.lowStockOnly && row.product_inventory >= LOW_STOCK_THRESHOLD) {
+        return false;
+      }
+      return true;
+    });
+  }, [inventoryRows, filters.category, filters.lowStockOnly]);
+
+  const { page, setPage, totalPages, pageItems } = usePagination({
+    totalItems: filteredRows.length,
+    pageSize: 10,
+  });
+
+  const pagedRows = pageItems(filteredRows);
 
   return (
-    <div>
-      <h1>Inventory</h1>
-      
-      <button type="button" onClick={() => console.log("Open Modal")}>
-        Adjust Stock
-      </button>
-
-      <div>
-        <input type="text" placeholder="Search..." />
+    <div className="inventory-page">
+      <div className="inventory-page__header">
+        <h1 className="inventory-page__title">Inventory</h1>
+        <button type="button" className="btn btn-primary" onClick={() => setIsCreateOpen(true)}>
+          <Plus size={16} strokeWidth={2} aria-hidden="true" />
+          Adjust Stock
+        </button>
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Product</th>
-            <th>Quantity</th>
-          </tr>
-        </thead>
-        <tbody>
-          {loading ? (
-            <tr>
-              <td colSpan="3">Loading...</td>
-            </tr>
-          ) : (
-            inventory.map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.name}</td>
-                <td>{item.quantity}</td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+      <div className="inventory-page__filters">
+        <div className="inventory-page__filter">
+          <label htmlFor="inventory-store-filter" className="inventory-page__filter-label">
+            Store
+          </label>
+          <select
+            id="inventory-store-filter"
+            className="form-select"
+            value={filters.storeId}
+            onChange={(event) => setFilters('inventory', { storeId: event.target.value })}
+          >
+            <option value="">All stores</option>
+            {stores.map((store) => (
+              <option key={store.id} value={store.store_id}>
+                {store.store_name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="inventory-page__filter">
+          <label htmlFor="inventory-category-filter" className="inventory-page__filter-label">
+            Brand
+          </label>
+          <select
+            id="inventory-category-filter"
+            className="form-select"
+            value={filters.category}
+            onChange={(event) => setFilters('inventory', { category: event.target.value })}
+          >
+            <option value="">All brands</option>
+            {categoryOptions.map((brand) => (
+              <option key={brand} value={brand}>
+                {brand}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="inventory-page__filter inventory-page__filter--switch">
+          <label
+            className="form-check form-switch inventory-page__switch-label"
+            htmlFor="inventory-low-stock-toggle"
+          >
+            <input
+              id="inventory-low-stock-toggle"
+              className="form-check-input inventory-page__switch-input"
+              type="checkbox"
+              role="switch"
+              checked={filters.lowStockOnly}
+              onChange={(event) => setFilters('inventory', { lowStockOnly: event.target.checked })}
+            />
+            Show low stock only
+          </label>
+        </div>
+      </div>
+
+      <InventoryTable
+        rows={pagedRows}
+        isLoading={isLoading}
+        isError={isError}
+        onRetry={refetch}
+        pagination={
+          filteredRows.length > 10 ? { page, totalPages, onPageChange: setPage } : undefined
+        }
+      />
+
+      <RestockModal isOpen={isCreateOpen} onClose={() => setIsCreateOpen(false)} inventoryRow={null} />
     </div>
   );
 }
+
+export default Inventory;

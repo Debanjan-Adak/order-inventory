@@ -1,12 +1,10 @@
-import "./CustomerStatus.css";
+import { StatusBadge } from "@shared/components/common/StatusBadge";
 
-// isBlocked comes straight off the customer record's `isblocked` field.
-function CustomerStatus({ isBlocked }) {
-  return (
-    <span className={`customer-status-badge ${isBlocked ? "is-blocked" : "is-active"}`}>
-      <span className="customer-status-dot" aria-hidden="true" />
-      {isBlocked ? "Blocked" : "Active"}
-    </span>
+export function CustomerStatus({ isblocked }) {
+  return isblocked ? (
+    <StatusBadge status="BANNED" label="Banned" />
+  ) : (
+    <StatusBadge status="ACTIVE" label="Active" />
   );
 }
 

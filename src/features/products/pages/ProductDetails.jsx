@@ -1,110 +1,191 @@
-// for structure
+import { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { Minus, Plus, PackageX, Star } from 'lucide-react';
+import formatCurrency from '@shared/utils/formatCurrency';
+import { EmptyState } from '@shared/components/common/EmptyState';
+import { Loader } from '@shared/components/common/Loader';
+import { useCartStore } from '@features/cart/store/cartStore';
+import { useToastStore } from '@stores/toastStore';
+import { useProducts } from '../hooks/useProducts';
+import { ProductImage } from '../components/ProductImage';
+import './ProductDetails.css';
 
-import { useParams } from "react-router-dom";
-import { Star } from "lucide-react";
-import ProductImage from "../components/ProductImage";
-import { useProduct } from "../hooks/useProducts";
-import { formatCurrency } from "../../../shared/utils/formatCurrency";
-import Skeleton from "../../../shared/components/common/Skeleton";
-import ErrorState from "../../../shared/components/common/ErrorState";
-import useCartStore from "../../cart/store/cartStore";
-import useAuthStore from "../../auth/store/authStore";
+const MAX_QUANTITY = 20;
 
-function RatingStars({ rating }) {
-  const stars = [1, 2, 3, 4, 5];
-  return (
-    <div className="d-flex align-items-center gap-1">
-      {stars.map((value) => (
-        <Star
-          key={value}
-          size={18}
-          strokeWidth={1.75}
-          className={value <= rating ? "text-warning" : "text-secondary"}
-          fill={value <= rating ? "currentColor" : "none"}
-        />
-      ))}
-    </div>
-  );
-}
-
-function ProductDetails() {
+export function ProductDetails() {
   const { id } = useParams();
-  const { data, isLoading, isError } = useProduct(id);
+  const { data: products, isLoading } = useProducts();
   const addItem = useCartStore((state) => state.addItem);
-  const role = useAuthStore((state) => state.role);
-  const showAddToCart = role !== "admin";
+  const addToast = useToastStore((state) => state.addToast);
+  const [quantity, setQuantity] = useState(1);
 
-  const product = Array.isArray(data) ? data[0] : data;
+  const product = (products ?? []).find(
+    (item) => String(item.id) === id
+  );
 
   if (isLoading) {
-    return <Skeleton rows={6} />;
+    return (
+      <div className="product-details product-details--loading">
+        <Loader size="md" />
+      </div>
+    );
   }
 
-  if (isError || !product) {
+  if (!product) {
     return (
-      <ErrorState
-        heading="Something went wrong"
-        body="We couldn't load this data. Check your connection and try again."
+      <EmptyState
+        icon={PackageX}
+        heading="Product not found"
+        body="This product may have been removed or is no longer available."
+        action={{
+          label: 'Back to Products',
+          onClick: () => window.history.back(),
+        }}
       />
     );
   }
 
+  function decrement() {
+    setQuantity((current) =>
+      Math.max(1, current - 1)
+    );
+  }
+
+  function increment() {
+    setQuantity((current) =>
+      Math.min(MAX_QUANTITY, current + 1)
+    );
+  }
+
+  function handleAddToCart() {
+    addItem(
+      {
+        productId: product.id,
+        productName: product.product_name,
+        unitPrice: product.unit_price,
+        colour: product.colour,
+      },
+      quantity
+    );
+
+    addToast({
+      type: 'success',
+      message: `Added ${quantity} ${
+        quantity > 1 ? 'items' : 'item'
+      } to cart!`,
+    });
+  }
+
+  const numericRating = Number(product.rating) || 0;
+
   return (
-    <div className="row g-4">
-      <div className="col-12 col-lg-5">
-        <div style={{ height: "320px" }}>
-          <ProductImage colour={product.colour} size="card" />
+    <div className="product-details">
+      <Link
+        to="/"
+        className="product-details__back-link"
+      >
+        &larr; Back to Products
+      </Link>
+
+      <div className="product-details__layout">
+        <div className="product-details__image">
+          <ProductImage
+            image={product.image}
+            colour={product.colour}
+            alt={product.product_name}
+            variant="card"
+          />
         </div>
-      </div>
 
-      <div className="col-12 col-lg-7 d-flex flex-column gap-3">
-        <h1 className="h3 fw-semibold mb-0" style={{ color: "var(--text-primary)" }}>
-          {product.product_name}
-        </h1>
+        <div className="product-details__info">
+          <h1 className="product-details__name">
+            {product.product_name}
+          </h1>
 
-        <div className="d-flex align-items-center gap-3">
-          <span className="badge rounded-pill text-bg-light border">{product.brand}</span>
-          <RatingStars rating={product.rating} />
-        </div>
+          <span className="product-details__brand-badge">
+            {product.brand}
+          </span>
 
-        <span
-          className="fs-2 fw-bold"
-          style={{ fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}
-        >
-          {formatCurrency(product.unit_price)}
-        </span>
+          <p className="product-details__price tabular-nums">
+            {formatCurrency(product.unit_price)}
+          </p>
 
-        <dl className="row mb-0">
-          <dt className="col-4 col-sm-3 small" style={{ color: "var(--text-muted)" }}>
-            Colour
-          </dt>
-          <dd className="col-8 col-sm-9">{product.colour}</dd>
-
-          <dt className="col-4 col-sm-3 small" style={{ color: "var(--text-muted)" }}>
-            Size
-          </dt>
-          <dd className="col-8 col-sm-9">{product.size}</dd>
-        </dl>
-
-        {showAddToCart && (
-          <div>
-            <button
-              type="button"
-              className="btn btn-primary px-4 py-2 mt-3"
-              style={{ backgroundColor: "var(--brand-accent)", borderColor: "var(--brand-accent)", borderRadius: "10px" }}
-              onClick={() => {
-                addItem({
-                  id: product.id || product.product_id,
-                  name: product.product_name,
-                  unitPrice: product.unit_price,
-                  colour: product.colour
-                });
-              }}
-            >
-              Add to Cart
-            </button>
+          <div
+            className="product-details__rating"
+            aria-label={`Rated ${numericRating} out of 5`}
+          >
+            {Array.from({ length: 5 }, (_, index) => (
+              <Star
+                key={index}
+                size={16}
+                strokeWidth={2}
+                className={`product-details__star ${
+                  index < Math.round(numericRating)
+                    ? 'product-details__star--filled'
+                    : ''
+                }`}
+              />
+            ))}
           </div>
-        )}
+
+          <dl className="product-details__meta">
+            <div className="product-details__meta-row">
+              <dt>Colour</dt>
+              <dd>{product.colour}</dd>
+            </div>
+
+            <div className="product-details__meta-row">
+              <dt>Size</dt>
+              <dd>{product.size}</dd>
+            </div>
+          </dl>
+
+          <div className="product-details__quantity-row">
+            <span className="product-details__quantity-label">
+              Quantity
+            </span>
+
+            <div className="product-details__stepper">
+              <button
+                type="button"
+                className="product-details__stepper-btn"
+                onClick={decrement}
+                disabled={quantity <= 1}
+                aria-label="Decrease quantity"
+              >
+                <Minus
+                  size={14}
+                  strokeWidth={2}
+                />
+              </button>
+
+              <span className="product-details__stepper-value tabular-nums">
+                {quantity}
+              </span>
+
+              <button
+                type="button"
+                className="product-details__stepper-btn"
+                onClick={increment}
+                disabled={quantity >= MAX_QUANTITY}
+                aria-label="Increase quantity"
+              >
+                <Plus
+                  size={14}
+                  strokeWidth={2}
+                />
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            className="btn btn-primary product-details__add-btn"
+            onClick={handleAddToCart}
+          >
+            Add to Cart
+          </button>
+        </div>
       </div>
     </div>
   );

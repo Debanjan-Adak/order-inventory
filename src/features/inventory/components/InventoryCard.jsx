@@ -1,30 +1,65 @@
-import React from "react";
-import { StockBadge } from "./StockBadge";
+import { useState } from 'react';
+import { TriangleAlert } from 'lucide-react';
+import { StockBadge, getStockTone } from './StockBadge';
+import { RestockModal } from './RestockModal';
+import './InventoryCard.css';
 
-export const InventoryCard = ({ item, theme, onRestock }) => {
-  const isDark = theme === "dark";
+/**
+ * @param {object} props
+ * @param {object} props.row 
+ */
+
+export function InventoryCard({ row }) {
+  const [isRestockOpen, setIsRestockOpen] = useState(false);
+  const { status } = getStockTone(row.product_inventory);
+
   return (
-    <div className={`card p-3 mb-3 border border-1 shadow-sm transition-all h-100 
-    ${isDark ? "bg-dark text-light border-secondary" : "bg-white text-dark"}`}>
-      <div className="card-body d-flex flex-column justify-content-between">
-        <div>
-
-          <span className="badge bg-secondary font-monospace mb-2">
-            Bridge: #{item.inventory_id}</span>
-          <h5 className="card-title fw-bold my-1" style={{ color: "#4F46E5" }}>
-            SKU_{item.product_id}</h5>
-          <p className="card-text text-muted small">Warehouse Node: #{item.store_id}</p>
-
-        </div>
-
-        <div className="d-flex justify-content-between align-items-center mt-3">
-          <StockBadge quantity={item.product_inventory} />
-          <button className="btn btn-sm btn-outline-primary btn-interact" 
-          onClick={() => onRestock(item)}>
-            Adjust
-          </button>
+    <div className="inventory-card">
+      <div className="inventory-card__header">
+        <span
+          className="inventory-card__colour-dot"
+          style={{ background: row.product?.colour }}
+          aria-hidden="true"
+        />
+        <div className="inventory-card__titles">
+          <p className="inventory-card__product-name">
+            {row.product?.product_name ?? 'Unknown product'}
+          </p>
+          <p className="inventory-card__store-name">{row.store?.store_name ?? 'Unknown store'}</p>
         </div>
       </div>
+
+      <div className="inventory-card__quantity-row">
+        <span className="inventory-card__quantity-value">
+          {status === 'LOWSTOCK' ? (
+            <TriangleAlert
+              size={14}
+              strokeWidth={2}
+              className="inventory-card__low-icon"
+              aria-hidden="true"
+            />
+          ) : null}
+          {row.product_inventory} units
+        </span>
+      </div>
+
+      <StockBadge quantity={row.product_inventory} />
+
+      <button
+        type="button"
+        className="btn btn-outline-secondary btn-sm inventory-card__action"
+        onClick={() => setIsRestockOpen(true)}
+      >
+        Adjust Stock
+      </button>
+
+      <RestockModal
+        isOpen={isRestockOpen}
+        onClose={() => setIsRestockOpen(false)}
+        inventoryRow={row}
+      />
     </div>
   );
-};
+}
+
+export default InventoryCard;
