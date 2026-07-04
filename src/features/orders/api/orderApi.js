@@ -1,6 +1,6 @@
-import axios from '@shared/api/axios';
-import endpoints from '@shared/api/endpoints';
-import { customerApi } from '@features/customers/api/customerApi';
+import axios from "@shared/api/axios";
+import endpoints from "@shared/api/endpoints";
+import { customerApi } from "@features/customers/api/customerApi";
 
 async function fetchAll(endpoint) {
   const { data } = await axios.get(endpoint);
@@ -11,13 +11,18 @@ export async function getAllOrders() {
   return fetchAll(endpoints.orders.all());
 }
 
-
 export async function getOrder(id) {
   const { data: order } = await axios.get(endpoints.orders.byId(id));
 
   const [customer, store, items, products] = await Promise.all([
-    axios.get(endpoints.customers.byId(order.customer_id)).then((r) => r.data).catch(() => null),
-    axios.get(endpoints.stores.byId(order.store_id)).then((r) => r.data).catch(() => null),
+    axios
+      .get(endpoints.customers.byId(order.customer_id))
+      .then((r) => r.data)
+      .catch(() => null),
+    axios
+      .get(endpoints.stores.byId(order.store_id))
+      .then((r) => r.data)
+      .catch(() => null),
     fetchAll(endpoints.orderItems.byOrderId(order.order_id)),
     fetchAll(endpoints.products.all()),
   ]);
@@ -31,17 +36,19 @@ export async function getOrder(id) {
   return { ...order, customer, store, items: itemsWithProduct };
 }
 
-
 export async function getOrdersByStore(storeName) {
   const stores = await fetchAll(endpoints.stores.all());
   const store = stores.find(
-    (s) => String(s.store_name).toLowerCase() === String(storeName).toLowerCase()
+    (s) =>
+      String(s.store_name).toLowerCase() === String(storeName).toLowerCase(),
   );
   if (!store) {
     return [];
   }
 
-  const storeOrders = await fetchAll(endpoints.orders.byStoreId(store.store_id));
+  const storeOrders = await fetchAll(
+    endpoints.orders.byStoreId(store.store_id),
+  );
   return storeOrders.map((order) => ({
     orderid: order.order_id,
     orderstatus: order.order_status,
@@ -71,16 +78,18 @@ export async function getOrdersByCustomer(customerIdOrEmail) {
   const raw = String(customerIdOrEmail).trim();
   const numeric = Number(raw);
 
-  if (raw !== '' && Number.isFinite(numeric)) {
+  if (raw !== "" && Number.isFinite(numeric)) {
     return fetchAll(endpoints.orders.byCustomerId(numeric));
   }
 
-  if (raw.includes('@')) {
+  if (raw.includes("@")) {
     const matches = await customerApi.lookup(raw);
     const customer = matches.find(
-      (c) => String(c.email_address).toLowerCase() === raw.toLowerCase()
+      (c) => String(c.email_address).toLowerCase() === raw.toLowerCase(),
     );
-    return customer ? fetchAll(endpoints.orders.byCustomerId(customer.customer_id)) : [];
+    return customer
+      ? fetchAll(endpoints.orders.byCustomerId(customer.customer_id))
+      : [];
   }
 
   return [];
@@ -102,7 +111,9 @@ export async function updateOrder({ id, ...fields }) {
 }
 
 export async function cancelOrder(id) {
-  const { data } = await axios.patch(endpoints.orders.update(id), { order_status: 'CANCELLED' });
+  const { data } = await axios.patch(endpoints.orders.update(id), {
+    order_status: "CANCELLED",
+  });
   return data;
 }
 
