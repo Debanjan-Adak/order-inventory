@@ -1,51 +1,58 @@
-
 import { useQuery } from "@tanstack/react-query";
-import { create } from "zustand";
-import { getOrders, getOrder, getOrderItems } from "../api/orderApi";
+import * as orderApi from "../api/orderApi";
 
-
-export const useOrderStore = create((set) => ({
-  theme: "light",
-  toggleTheme: () => set((state) => ({ theme: state.theme === "light" ? "dark" : "light" })),
-  draftItems: [],
-  clearDraft: () => set({ draftItems: [] })
-}));
-
-
-export const useOrders = () => {
+export function useOrders() {
   return useQuery({
-    queryKey: ["orders"],
-    queryFn: async () => {
-      const { data } = await getOrders();
-      return data;
-    }
+    queryKey: ["orders", "list"],
+    queryFn: orderApi.getAllOrders,
   });
-};
+}
 
-export const useOrderDetails = (id) => {
+export function useOrder(id) {
   return useQuery({
-    queryKey: ["order", id],
-    queryFn: async () => {
-      const orderRes = await getOrder(id);
-      const itemsRes = await getOrderItems(id);
-      return { ...orderRes.data, items: itemsRes.data };
-    },
-    enabled: !!id
+    queryKey: ["orders", "detail", id],
+    queryFn: () => orderApi.getOrder(id),
+    enabled: Boolean(id),
   });
-};
+}
 
-
-export const useOrderStatusCount = () => {
+export function useOrdersByStore(storeName) {
   return useQuery({
-    queryKey: ["orders", "statusCount"],
-    queryFn: async () => {
-      const { data } = await getOrders();
-      const counts = {};
-      data.forEach((order) => {
-        const status = order.order_status || "UNKNOWN";
-        counts[status] = (counts[status] || 0) + 1;
-      });
-      return counts;
-    }
+    queryKey: ["orders", "by-store", storeName],
+    queryFn: () => orderApi.getOrdersByStore(storeName),
+    enabled: Boolean(storeName),
   });
-};
+}
+
+export function useOrderStatusCounts() {
+  return useQuery({
+    queryKey: ["orders", "status-counts"],
+    queryFn: orderApi.getOrderStatusCounts,
+  });
+}
+
+export function useOrdersByStatus(status) {
+  return useQuery({
+    queryKey: ["orders", "by-status", status],
+    queryFn: () => orderApi.getOrdersByStatus(status),
+    enabled: Boolean(status),
+  });
+}
+
+export function useOrdersByDateRange(start, end) {
+  return useQuery({
+    queryKey: ["orders", "by-date-range", start, end],
+    queryFn: () => orderApi.getOrdersByDateRange(start, end),
+    enabled: Boolean(start && end),
+  });
+}
+
+export function useOrdersByCustomer(customerIdOrEmail) {
+  return useQuery({
+    queryKey: ["orders", "by-customer", customerIdOrEmail],
+    queryFn: () => orderApi.getOrdersByCustomer(customerIdOrEmail),
+    enabled: Boolean(customerIdOrEmail),
+  });
+}
+
+export default useOrders;

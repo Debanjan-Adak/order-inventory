@@ -1,23 +1,127 @@
-import axiosClient from "../../../shared/api/axios";
+import axios from '@shared/api/axios';
+import endpoints from '@shared/api/endpoints';
+import { customerApi } from '@features/customers/api/customerApi';
 
-export const getOrders = () => axiosClient.get("/orders");
-export const getOrder = (id) => axiosClient.get(`/orders/${id}`);
-export const addOrder = (order) => axiosClient.post("/orders", order);
-export const updateOrder = (id, order) => axiosClient.patch(`/orders/${id}`, order);
-export const deleteOrder = (id) => axiosClient.delete(`/orders/${id}`);
+async function fetchAll(endpoint) {
+  const { data } = await axios.get(endpoint);
+  return data;
+}
 
-export const cancelOrder = (id) => {
-  return axiosClient.patch(`/orders/${id}`, { order_status: "CANCELLED" });
-};
+export async function getAllOrders() {
+  return fetchAll(endpoints.orders.all());
+}
 
-export const getCustomerOrders = (customerId) => {
-  return axiosClient.get("/orders", { params: { customer_id: customerId } });
-};
 
-export const getOrderItems = (orderId) => {
-  return axiosClient.get("/order_items", { params: { order_id: orderId } });
-};
+export async function getOrder(id) {
+  const { data: order } = await axios.get(endpoints.orders.byId(id));
 
-export const addOrderItems = (items) => {
-  return Promise.all(items.map((item) => axiosClient.post("/order_items", item)));
+  const [customer, store, items, products] = await Promise.all([
+    axios.get(endpoints.customers.byId(order.customer_id)).then((r) => r.data).catch(() => null),
+    axios.get(endpoints.stores.byId(order.store_id)).then((r) => r.data).catch(() => null),
+    fetchAll(endpoints.orderItems.byOrderId(order.order_id)),
+    fetchAll(endpoints.products.all()),
+  ]);
+
+  const productsById = new Map(products.map((p) => [p.product_id, p]));
+  const itemsWithProduct = items.map((item) => ({
+    ...item,
+    product: productsById.get(item.product_id) || null,
+  }));
+
+  return { ...order, customer, store, items: itemsWithProduct };
+}
+
+
+export async function getOrdersByStore(storeName) {
+  const stores = await fetchAll(endpoints.stores.all());
+  const store = stores.find(
+    (s) => String(s.store_name).toLowerCase() === String(storeName).toLowerCase()
+  );
+  if (!store) {
+    return [];
+  }
+
+  const storeOrders = await fetchAll(endpoints.orders.byStoreId(store.store_id));
+  return storeOrders.map((order) => ({
+    orderid: order.order_id,
+    orderstatus: order.order_status,
+    storename: store.store_name,
+    webaddress: store.web_address,
+  }));
+}
+
+export async function getOrderStatusCounts() {
+  const orders = await fetchAll(endpoints.orders.all());
+  const counts = {};
+  for (const o of orders) {
+    counts[o.order_status] = (counts[o.order_status] || 0) + 1;
+  }
+  return Object.entries(counts).map(([status, count]) => ({ status, count }));
+}
+
+export async function getOrdersByStatus(status) {
+  return fetchAll(endpoints.orders.byStatus(status));
+}
+
+export async function getOrdersByDateRange(start, end) {
+  return fetchAll(endpoints.orders.byDateRange(start, end));
+}
+
+export async function getOrdersByCustomer(customerIdOrEmail) {
+  const raw = String(customerIdOrEmail).trim();
+  const numeric = Number(raw);
+
+  if (raw !== '' && Number.isFinite(numeric)) {
+    return fetchAll(endpoints.orders.byCustomerId(numeric));
+  }
+
+  if (raw.includes('@')) {
+    const matches = await customerApi.lookup(raw);
+    const customer = matches.find(
+      (c) => String(c.email_address).toLowerCase() === raw.toLowerCase()
+    );
+    return customer ? fetchAll(endpoints.orders.byCustomerId(customer.customer_id)) : [];
+  }
+
+  return [];
+}
+
+export async function createOrder(payload) {
+  const { data } = await axios.post(endpoints.orders.create(), payload);
+  return data;
+}
+
+export async function createOrderItem(payload) {
+  const { data } = await axios.post(endpoints.orderItems.create(), payload);
+  return data;
+}
+
+export async function updateOrder({ id, ...fields }) {
+  const { data } = await axios.patch(endpoints.orders.update(id), fields);
+  return data;
+}
+
+export async function cancelOrder(id) {
+  const { data } = await axios.patch(endpoints.orders.update(id), { order_status: 'CANCELLED' });
+  return data;
+}
+
+export async function deleteOrder(id) {
+  const { data } = await axios.delete(endpoints.orders.remove(id));
+  return data;
+}
+
+export default {
+  getAllOrders,
+  getOrder,
+  getOrdersByStore,
+  getOrderStatusCounts,
+  getOrdersByStatus,
+  getOrdersByDateRange,
+  getOrdersByCustomer,
+  createOrder,
+  createOrderItem,
+  updateOrder,
+  cancelOrder,
+  deleteOrder,
 };

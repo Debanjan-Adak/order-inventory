@@ -1,0 +1,27 @@
+.order-card {
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.order-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+  border-color: transparent;
+}
+
+.order-card__id {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-body-strong);
+}
+
+.order-card__row {
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+}
+
+.order-card__label {
+  color: var(--color-text-muted);
+}
