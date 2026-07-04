@@ -1,48 +1,74 @@
 import { useQuery } from "@tanstack/react-query";
-import { getCustomers, getCustomerById, getCustomerOrders } from "../api/customerApi";
+import { customerApi } from "../api/customerApi";
 
-// List page: search + status filter, paginated
-export function useCustomers(filters = {}) {
+export const CUSTOMERS_QUERY_KEY = ["customers"];
+
+export function useCustomers() {
   return useQuery({
-    queryKey: ["customers", filters],
-    queryFn: () => getCustomers(filters),
-    keepPreviousData: true,
-    staleTime: 30_000,
+    queryKey: CUSTOMERS_QUERY_KEY,
+    queryFn: customerApi.getAll,
   });
 }
 
-// Detail page: single customer record
-export function useCustomer(customerId) {
+export function useShipmentStatusCounts() {
   return useQuery({
-    queryKey: ["customers", customerId],
-    queryFn: () => getCustomerById(customerId),
-    enabled: Boolean(customerId),
+    queryKey: ["customers", "shipment-status-counts"],
+    queryFn: customerApi.getShipmentStatusCounts,
   });
 }
 
-// Detail page: read-only order history, owned by the orders feature's API
-// but fetched here through /customers/:id/order per the API spec
-export function useCustomerOrders(customerId) {
+export function useCustomerSearch(query) {
   return useQuery({
-    queryKey: ["customers", customerId, "orders"],
-    queryFn: () => getCustomerOrders(customerId),
-    enabled: Boolean(customerId),
+    queryKey: ["customers", "search", query],
+    queryFn: () => customerApi.lookup(query),
+    enabled: !!query,
   });
 }
 
-// Used by DashboardChart: counts shipment statuses from orders
-export function useShipmentStatusCount() {
+export function useCustomerOrders(custId) {
   return useQuery({
-    queryKey: ["shipments", "statusCount"],
-    queryFn: async () => {
-      // Shipment data is derived from order statuses for now
-      const { data } = await import("../../orders/api/orderApi").then(m => m.getOrders());
-      const counts = {};
-      data.forEach((order) => {
-        const status = order.order_status || "UNKNOWN";
-        counts[status] = (counts[status] || 0) + 1;
-      });
-      return counts;
-    }
+    queryKey: ["customers", custId, "orders"],
+    queryFn: () => customerApi.getOrders(custId),
+    enabled: !!custId,
   });
 }
+
+export function useCustomerShipments(custId) {
+  return useQuery({
+    queryKey: ["customers", custId, "shipments"],
+    queryFn: () => customerApi.getShipments(custId),
+    enabled: !!custId,
+  });
+}
+
+export function useCustomersPendingShipments() {
+  return useQuery({
+    queryKey: ["customers", "pending-shipments"],
+    queryFn: customerApi.getPendingShipments,
+  });
+}
+
+export function useCustomersCompletedOrders() {
+  return useQuery({
+    queryKey: ["customers", "completed-orders"],
+    queryFn: customerApi.getCompletedOrders,
+  });
+}
+
+export function useCustomersByOrderQuantityRange(min, max) {
+  return useQuery({
+    queryKey: ["customers", "order-quantity-range", min, max],
+    queryFn: () => customerApi.getByOrderQuantityRange(min, max),
+    enabled:
+      min !== undefined && min !== null && max !== undefined && max !== null,
+  });
+}
+
+export function useCustomersOverdueShipments() {
+  return useQuery({
+    queryKey: ["customers", "overdue-shipments"],
+    queryFn: customerApi.getOverdueShipments,
+  });
+}
+
+export default useCustomers;

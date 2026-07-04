@@ -1,36 +1,37 @@
-.customer-form .form-label {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--text-primary, #0f172a);
-}
-
-.customer-form .form-control {
-  border-color: var(--border-default, #e2e8f0);
-  font-size: 0.875rem;
-}
-
-.customer-form .form-control:focus {
-  border-color: var(--brand-accent, #4f46e5);
-  box-shadow: 0 0 0 2px var(--brand-accent-soft, #eef2ff);
-}
-
-.customer-form-pin {
-  max-width: 160px;
-  letter-spacing: 0.2em;
-}
-
-.invalid-feedback-text {
-  display: block;
-  margin-top: 4px;
-  font-size: 0.75rem;
-  color: var(--status-cancelled, #dc2626);
-}
-
-.customer-form-actions {
+.customer-form {
   display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.customer-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.customer-form__label {
+  font-size: var(--font-size-body-strong);
+  font-weight: var(--font-weight-body-strong);
+  color: var(--color-text-secondary);
+}
+
+.customer-form__error {
+  margin: 0;
+  font-size: var(--font-size-caption);
+  color: var(--color-status-cancelled);
+}
+
+.customer-form__actions {
+  display: flex;
+  align-items: center;
   justify-content: flex-end;
-  gap: 8px;
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-default, #e2e8f0);
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.customer-form__actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
 }
