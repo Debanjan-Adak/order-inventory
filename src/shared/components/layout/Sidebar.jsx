@@ -1,62 +1,70 @@
-import { NavLink } from "react-router-dom";
-import useAuth from "../../../features/auth/hooks/useAuth";
+import { NavLink } from 'react-router-dom';
+import {
+  LayoutDashboard,
+  Package,
+  Users,
+  ShoppingCart,
+  Warehouse,
+  Building2,
+  Truck,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
+import { useUIStore } from '@stores/uiStore';
+import { classNames } from '@shared/utils/helpers';
+import './Sidebar.css';
 
-function Sidebar() {
-  const { isAuthenticated, user, logout } = useAuth();
+const NAV_ITEMS = [
+  { label: 'Dashboard', icon: LayoutDashboard, path: '/admin', end: true },
+  { label: 'Products', icon: Package, path: '/admin/products' },
+  { label: 'Customers', icon: Users, path: '/admin/customers' },
+  { label: 'Orders', icon: ShoppingCart, path: '/admin/orders' },
+  { label: 'Inventory', icon: Warehouse, path: '/admin/inventory' },
+  { label: 'Stores', icon: Building2, path: '/admin/stores' },
+  { label: 'Shipments', icon: Truck, path: '/admin/shipments' },
+];
+
+
+export function Sidebar() {
+  const isCollapsed = useUIStore((state) => state.isSidebarCollapsed);
+  const toggleSidebar = useUIStore((state) => state.toggleSidebar);
 
   return (
-    <aside
-      className="bg-dark text-white vh-100 p-3 d-flex flex-column"
-      style={{ width: "250px" }}
-    >
-      <div>
-        <h4 className="mb-4">Order Inventory</h4>
-        <ul className="nav flex-column gap-2">
-          <li className="nav-item">
-            <NavLink className="nav-link text-white" to="/admin">
-              Dashboard
-            </NavLink>
-          </li>
-
-          <li className="nav-item">
-            <NavLink className="nav-link text-white" to="/products">
-              Products
-            </NavLink>
-          </li>
-
-          <li className="nav-item">
-            <NavLink className="nav-link text-white" to="/admin/customers">
-              Customers
-            </NavLink>
-          </li>
-
-          <li className="nav-item">
-            <NavLink className="nav-link text-white" to="/admin/orders">
-              Orders
-            </NavLink>
-          </li>
-
-          <li className="nav-item">
-            <NavLink className="nav-link text-white" to="/admin/inventory">
-              Inventory
-            </NavLink>
-          </li>
+    <aside className={classNames('sidebar', isCollapsed && 'sidebar--collapsed')}>
+      <nav className="sidebar__nav" aria-label="Admin navigation">
+        <ul className="sidebar__list">
+          {NAV_ITEMS.map(({ label, icon: Icon, path, end }) => (
+            <li key={path} className="sidebar__item">
+              <NavLink
+                to={path}
+                end={end}
+                title={isCollapsed ? label : undefined}
+                className={({ isActive }) =>
+                  classNames('sidebar__link', isActive && 'sidebar__link--active')
+                }
+              >
+                <span className="sidebar__icon">
+                  <Icon size={20} aria-hidden="true" />
+                </span>
+                <span className="sidebar__label">{label}</span>
+              </NavLink>
+            </li>
+          ))}
         </ul>
-      </div>
+      </nav>
 
-      {isAuthenticated && (
-        <div className="mt-auto pt-3 border-top border-secondary">
-          <div
-            className="mb-2 text-truncate small"
-            title={user?.name || user?.full_name}
-          >
-            👤 {user?.name || user?.full_name || "Admin"}
-          </div>
-          <button className="btn btn-danger btn-sm w-100" onClick={logout}>
-            Logout
-          </button>
-        </div>
-      )}
+      <button
+        type="button"
+        className="sidebar__toggle"
+        onClick={toggleSidebar}
+        aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      >
+        {isCollapsed ? (
+          <ChevronRight size={18} aria-hidden="true" />
+        ) : (
+          <ChevronLeft size={18} aria-hidden="true" />
+        )}
+      </button>
     </aside>
   );
 }

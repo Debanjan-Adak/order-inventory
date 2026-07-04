@@ -1,42 +1,89 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
+import { useFiltersStore } from '@stores/filtersStore';
+import { useProducts } from '../hooks/useProducts';
+import './ProductFilter.css';
 
-function ProductFilter({ products, brand, colour, onBrandChange, onColourChange }) {
-  const brands = useMemo(() => {
-    if (!products) return [];
-    return Array.from(new Set(products.map((product) => product.brand))).sort();
+const SORT_OPTIONS = [
+  { value: '', label: 'Sort by…' },
+  { value: 'unit_price', label: 'Price' },
+  { value: 'product_name', label: 'Name' },
+  { value: 'rating', label: 'Rating' },
+];
+
+export function ProductFilter() {
+  const { data: products = [] } = useProducts();
+  const filters = useFiltersStore((state) => state.products);
+  const setFilters = useFiltersStore((state) => state.setFilters);
+
+  const brandOptions = useMemo(() => {
+    const brands = new Set(
+      products.map((product) => product.brand).filter(Boolean)
+    );
+
+    return Array.from(brands).sort();
   }, [products]);
 
-  const colours = useMemo(() => {
-    if (!products) return [];
-    return Array.from(new Set(products.map((product) => product.colour))).sort();
+  const colourOptions = useMemo(() => {
+    const colours = new Set(
+      products.map((product) => product.colour).filter(Boolean)
+    );
+
+    return Array.from(colours).sort();
   }, [products]);
 
   return (
-    <div className="d-flex flex-wrap gap-2">
+    <div className="product-filter">
       <select
-        className="form-select"
-        style={{ maxWidth: "180px" }}
-        value={brand}
-        onChange={(event) => onBrandChange(event.target.value)}
+        className="form-select product-filter__select"
+        aria-label="Filter by brand"
+        value={filters.brand}
+        onChange={(event) =>
+          setFilters('products', {
+            brand: event.target.value,
+          })
+        }
       >
         <option value="">All brands</option>
-        {brands.map((item) => (
-          <option key={item} value={item}>
-            {item}
+
+        {brandOptions.map((brand) => (
+          <option key={brand} value={brand}>
+            {brand}
           </option>
         ))}
       </select>
 
       <select
-        className="form-select"
-        style={{ maxWidth: "180px" }}
-        value={colour}
-        onChange={(event) => onColourChange(event.target.value)}
+        className="form-select product-filter__select"
+        aria-label="Filter by colour"
+        value={filters.colour}
+        onChange={(event) =>
+          setFilters('products', {
+            colour: event.target.value,
+          })
+        }
       >
         <option value="">All colours</option>
-        {colours.map((item) => (
-          <option key={item} value={item}>
-            {item}
+
+        {colourOptions.map((colour) => (
+          <option key={colour} value={colour}>
+            {colour}
+          </option>
+        ))}
+      </select>
+
+      <select
+        className="form-select product-filter__select"
+        aria-label="Sort products"
+        value={filters.sortField}
+        onChange={(event) =>
+          setFilters('products', {
+            sortField: event.target.value,
+          })
+        }
+      >
+        {SORT_OPTIONS.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
           </option>
         ))}
       </select>

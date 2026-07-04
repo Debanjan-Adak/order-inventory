@@ -1,74 +1,64 @@
-import Badge from "react-bootstrap/Badge";
+import './StatusBadge.css';
 
-function StatusBadge({ status }) {
-  if (!status) {
-    return <Badge bg="secondary">Unknown</Badge>;
+const STATUS_COLOR_KEYS = [
+  'PENDING',
+  'PROCESSING',
+  'SHIPPED',
+  'DELIVERED',
+  'CANCELLED',
+  'LOWSTOCK',
+];
+const SEMANTIC_TONE_MAP = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  SHIPPED: 'SHIPPED',
+  DELIVERED: 'DELIVERED',
+  CANCELLED: 'CANCELLED',
+  LOWSTOCK: 'LOWSTOCK',
+  LOW_STOCK: 'LOWSTOCK',
+
+  ACTIVE: 'DELIVERED',
+  ENABLED: 'DELIVERED',
+  APPROVED: 'DELIVERED',
+  IN_STOCK: 'DELIVERED',
+  COMPLETED: 'DELIVERED',
+  PAID: 'DELIVERED',
+
+  BANNED: 'CANCELLED',
+  DISABLED: 'CANCELLED',
+  REJECTED: 'CANCELLED',
+  OUT_OF_STOCK: 'CANCELLED',
+  FAILED: 'CANCELLED',
+  REFUNDED: 'CANCELLED',
+
+  INACTIVE: 'PENDING',
+  DRAFT: 'PENDING',
+  ON_HOLD: 'PENDING',
+};
+
+function resolveTone(status, tone) {
+  const key = (tone ?? status ?? '').toString().toUpperCase();
+  if (STATUS_COLOR_KEYS.includes(key)) {
+    return key;
   }
+  return SEMANTIC_TONE_MAP[key] ?? 'PENDING';
+}
 
-  const currentStatus = status.toString().toUpperCase();
-
-  let variant = "secondary";
-
-  let text = status;
-
-  switch (currentStatus) {
-    case "PENDING":
-      variant = "warning";
-      text = "Pending";
-      break;
-
-    case "PROCESSING":
-      variant = "primary";
-      text = "Processing";
-      break;
-
-    case "SHIPPED":
-      variant = "info";
-      text = "Shipped";
-      break;
-
-    case "DELIVERED":
-    case "COMPLETE":
-      variant = "success";
-      text = "Delivered";
-      break;
-
-    case "CANCELLED":
-      variant = "danger";
-      text = "Cancelled";
-      break;
-
-    case "ACTIVE":
-      variant = "success";
-      text = "Active";
-      break;
-
-    case "BLOCKED":
-      variant = "danger";
-      text = "Blocked";
-      break;
-
-    case "LOW STOCK":
-    case "LOW_STOCK":
-      variant = "warning";
-      text = "Low Stock";
-      break;
-
-    case "IN STOCK":
-    case "IN_STOCK":
-      variant = "success";
-      text = "In Stock";
-      break;
-
-    default:
-      variant = "secondary";
-      text = status;
-  }
+function toTitleCase(value) {
+  return value
+    .toString()
+    .toLowerCase()
+    .replace(/[_-]+/g, ' ')
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+export function StatusBadge({ status, label, tone }) {
+  const resolvedTone = resolveTone(status, tone);
+  const text = label ?? toTitleCase(status ?? '');
 
   return (
-    <Badge bg={variant} pill className="px-3 py-2 fw-semibold">
+    <span className={`status-badge status-badge--${resolvedTone.toLowerCase()}`}>
       {text}
-    </Badge>
+    </span>
   );
 }
 

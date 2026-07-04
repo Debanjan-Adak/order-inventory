@@ -1,0 +1,36 @@
+.product-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  object-fit: cover;
+  transition: transform var(--duration-base) var(--ease-in-out);
+}
+
+.product-image--card {
+  width: 100%;
+  height: 220px;
+  border: none;
+  border-radius: 0;
+}
+
+.product-image--avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+}
+
+.product-image--placeholder {
+  background-color: var(--color-surface-base);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--color-border-default),
+    var(--color-border-default) 6px,
+    var(--color-surface-base) 6px,
+    var(--color-surface-base) 12px
+  );
+}
+
+.product-image__icon {
+  color: var(--color-text-muted);
+}

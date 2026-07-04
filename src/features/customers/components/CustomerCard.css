@@ -1,54 +1,58 @@
 .customer-card {
-  background-color: var(--surface-card, #fff);
-  border: 1px solid var(--border-default, #e2e8f0);
-  border-radius: 12px;
-  padding: 16px;
-  cursor: pointer;
-  transition: border-color 150ms ease-out, transform 150ms ease-out;
-}
-
-.customer-card:hover {
-  border-color: var(--brand-accent, #4f46e5);
-  transform: translateY(-1px);
-}
-
-.customer-card-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  transition: all var(--duration-base) var(--ease-out);
 }
 
-.customer-card-avatar {
+.customer-card[role="button"] {
+  cursor: pointer;
+}
+
+.customer-card[role="button"]:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+  border-color: transparent;
+}
+
+.customer-card__avatar {
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  background-color: var(--brand-accent-soft, #eef2ff);
-  color: var(--brand-accent, #4f46e5);
-  font-size: 0.8rem;
-  font-weight: 600;
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--color-brand-accent) 15%, transparent);
+  color: var(--color-brand-accent);
+  font-size: var(--font-size-body-strong);
+  font-weight: var(--font-weight-body-strong);
 }
 
-.customer-card-name {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text-primary, #0f172a);
-  margin: 0 0 4px;
+.customer-card__info {
+  flex: 1;
+  min-width: 0;
 }
 
-.customer-card-email {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
-  color: var(--text-muted, #64748b);
-  margin: 0 0 16px;
+.customer-card__name {
+  margin: 0;
+  font-size: var(--font-size-body-strong);
+  font-weight: var(--font-weight-body-strong);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.customer-card-actions {
-  display: flex;
-  gap: 8px;
+.customer-card__email {
+  margin: 0;
+  font-size: var(--font-size-caption);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

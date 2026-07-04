@@ -1,52 +1,155 @@
-// Thin REST client for the customers resource.
-// Uses the shared axiosClient instance pointed at json-server (port 4000).
+import api from "@shared/api/axios";
+import { endpoints } from "@shared/api/endpoints";
+import { dedupById } from "@shared/utils/helpers";
+import { OVERDUE_SHIPMENT_THRESHOLD_DAYS } from "@shared/utils/constants";
 
-import axiosClient from "../../../shared/api/axios";
-
-// GET /customers?search=&status=&page=&limit=
-export async function getCustomers(filters = {}) {
-  const params = {};
-  if (filters.search) params.search = filters.search;
-  if (filters.status && filters.status !== "all") params.status = filters.status;
-  if (filters.page) params.page = filters.page;
-  if (filters.limit) params.limit = filters.limit;
-
-  const { data } = await axiosClient.get("/customers", { params });
+async function fetchAll(endpoint) {
+  const { data } = await api.get(endpoint);
   return data;
 }
 
-// GET /customers/:id
-export async function getCustomerById(customerId) {
-  const { data } = await axiosClient.get(`/customers/${customerId}`);
-  return data;
-}
+export const customerApi = {
+  getAll: () => api.get(endpoints.customers.all()).then((res) => res.data),
 
-// GET /orders?customer_id=:id — read-only order history for the detail page
-export async function getCustomerOrders(customerId) {
-  const { data } = await axiosClient.get("/orders", { params: { customer_id: customerId } });
-  return data;
-}
+  getShipmentStatusCounts: async () => {
+    const shipments = await fetchAll(endpoints.shipments.all());
+    const counts = {};
+    for (const s of shipments) {
+      counts[s.shipment_status] = (counts[s.shipment_status] || 0) + 1;
+    }
+    return Object.entries(counts).map(([status, count]) => ({ status, count }));
+  },
 
-// POST /customers
-export async function createCustomer(payload) {
-  const { data } = await axiosClient.post("/customers", payload);
-  return data;
-}
+  getPendingShipments: async () => {
+    const shipments = await fetchAll(endpoints.shipments.all());
+    const pending = shipments.filter(
+      (s) => s.shipment_status === "CREATED" || s.shipment_status === "SHIPPED",
+    );
+    const customerIds = new Set(pending.map((s) => s.customer_id));
+    const customers = await fetchAll(endpoints.customers.all());
+    return dedupById(customers.filter((c) => customerIds.has(c.customer_id)));
+  },
 
-// PUT /customers/:id
-export async function updateCustomer(customerId, payload) {
-  const { data } = await axiosClient.put(`/customers/${customerId}`, payload);
-  return data;
-}
+  getOverdueShipments: async () => {
+    const [shipments, orderItems, orders, customers] = await Promise.all([
+      fetchAll(endpoints.shipments.all()),
+      fetchAll(endpoints.orderItems.all()),
+      fetchAll(endpoints.orders.all()),
+      fetchAll(endpoints.customers.all()),
+    ]);
 
-// DELETE /customers/:id
-export async function deleteCustomer(customerId) {
-  const { data } = await axiosClient.delete(`/customers/${customerId}`);
-  return data;
-}
+    const now = Date.now();
+    const thresholdMs = OVERDUE_SHIPMENT_THRESHOLD_DAYS * 24 * 60 * 60 * 1000;
+    const overdueCustomerIds = new Set();
 
-// PATCH /customers/:id — used for both ban and unban, toggling isblocked
-export async function setCustomerBlockedStatus(customerId, isblocked) {
-  const { data } = await axiosClient.patch(`/customers/${customerId}`, { isblocked });
-  return data;
-}
+    for (const shipment of shipments) {
+      if (shipment.shipment_status === "DELIVERED") continue;
+
+      const relatedItem = orderItems.find(
+        (oi) => oi.shipment_id === shipment.shipment_id,
+      );
+      if (!relatedItem) continue;
+
+      const order = orders.find((o) => o.order_id === relatedItem.order_id);
+      if (!order || !order.order_tms) continue;
+
+      const orderTime = new Date(order.order_tms.replace(" ", "T")).getTime();
+      if (!Number.isFinite(orderTime)) continue;
+
+      if (now - orderTime > thresholdMs) {
+        overdueCustomerIds.add(shipment.customer_id);
+      }
+    }
+
+    return dedupById(
+      customers.filter((c) => overdueCustomerIds.has(c.customer_id)),
+    );
+  },
+
+  getCompletedOrders: async () => {
+    const orders = await fetchAll(endpoints.orders.byStatus("COMPLETE"));
+    const customerIds = new Set(orders.map((o) => o.customer_id));
+    const customers = await fetchAll(endpoints.customers.all());
+    return dedupById(customers.filter((c) => customerIds.has(c.customer_id)));
+  },
+
+  getByOrderQuantityRange: async (min, max) => {
+    const [customers, orders, orderItems] = await Promise.all([
+      fetchAll(endpoints.customers.all()),
+      fetchAll(endpoints.orders.all()),
+      fetchAll(endpoints.orderItems.all()),
+    ]);
+
+    return customers.filter((customer) => {
+      const custOrders = orders.filter(
+        (o) => o.customer_id === customer.customer_id,
+      );
+      const total = custOrders.reduce((sum, order) => {
+        const items = orderItems.filter((oi) => oi.order_id === order.order_id);
+        return sum + items.reduce((s, i) => s + (i.quantity || 0), 0);
+      }, 0);
+      return total >= min && total <= max;
+    });
+  },
+
+  getOrders: async (custId) => {
+    const customer = await api
+      .get(endpoints.customers.byId(custId))
+      .then((res) => res.data)
+      .catch(() => null);
+    if (!customer) {
+      throw new Error("Orders for the specified customer ID not found.");
+    }
+    const orders = await fetchAll(endpoints.orders.byCustomerId(custId));
+    return { customer, orders };
+  },
+
+  getShipments: async (custId) => {
+    const customer = await api
+      .get(endpoints.customers.byId(custId))
+      .then((res) => res.data)
+      .catch(() => null);
+    if (!customer) {
+      throw new Error(
+        "Shipment history for the specified customer ID not found.",
+      );
+    }
+    const shipments = await fetchAll(endpoints.shipments.byCustomerId(custId));
+    return { customer, shipments };
+  },
+
+  lookup: async (emailOrName) => {
+    const customers = await fetchAll(endpoints.customers.all());
+    const query = String(emailOrName).toLowerCase();
+    if (query.includes("@")) {
+      return customers.filter(
+        (c) => String(c.email_address).toLowerCase() === query,
+      );
+    }
+    return customers.filter((c) =>
+      String(c.full_name).toLowerCase().includes(query),
+    );
+  },
+
+  create: async (data) => {
+    const { data: created } = await api.post(
+      endpoints.customers.create(),
+      data,
+    );
+    if (created && created.customer_id === undefined) {
+      await api.patch(endpoints.customers.update(created.id), {
+        customer_id: created.id,
+      });
+      created.customer_id = created.id;
+    }
+    return created;
+  },
+
+  update: ({ id, ...fields }) =>
+    api.patch(endpoints.customers.update(id), fields).then((res) => res.data),
+
+  remove: (customerId) =>
+    api.delete(endpoints.customers.remove(customerId)).then((res) => res.data),
+};
+
+export default customerApi;

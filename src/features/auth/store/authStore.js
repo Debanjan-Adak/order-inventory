@@ -1,32 +1,22 @@
-import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-const useAuthStore = create()(
-  devtools(
-    persist(
-      (set) => ({
-        user: null,
-        role: null,
-        isAuthenticated: false,
+const INITIAL_STATE = {
+  user: null,
+  isAuthenticated: false,
+};
 
-        setSession: ({ user, role }) =>
-          set({ user, role, isAuthenticated: true }, false, "auth/setSession"),
+export const useAuthStore = create(
+  persist(
+    (set) => ({
+      ...INITIAL_STATE,
 
-        clearSession: () =>
-          set({ user: null, role: null, isAuthenticated: false }, false, "auth/clearSession"),
-
-        updateUser: (updates) =>
-          set(
-            (state) => ({
-              user: state.user ? { ...state.user, ...updates } : state.user
-            }),
-            false,
-            "auth/updateUser"
-          )
-      }),
-      { name: "auth-storage" }
-    ),
-    { name: "AuthStore" }
+      login: (user) => set({ user, isAuthenticated: true }),
+      logout: () => set({ ...INITIAL_STATE }),
+    }),
+    {
+      name: 'oims-auth',
+    }
   )
 );
 

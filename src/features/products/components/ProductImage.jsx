@@ -1,61 +1,51 @@
-import { Package } from "lucide-react";
+import { useState } from 'react';
+import { Package } from 'lucide-react';
+import { isValidCssColor } from '@shared/utils/helpers';
+import './ProductImage.css';
 
-const SAFE_COLOURS = [
-  "white",
-  "black",
-  "red",
-  "green",
-  "blue",
-  "yellow",
-  "pink",
-  "brown",
-  "orange",
-  "purple",
-  "grey",
-  "gray",
-];
+export function ProductImage({
+  image,
+  colour,
+  alt,
+  variant = 'card',
+}) {
+  const [imageFailed, setImageFailed] = useState(false);
 
-function resolveColour(colour) {
-  if (!colour) return null;
-  const normalized = colour.trim().toLowerCase();
-  if (normalized === "voilet") return "violet";
-  if (SAFE_COLOURS.includes(normalized)) return normalized;
-  if (CSS?.supports?.("color", normalized)) return normalized;
-  return null;
-}
-
-function ProductImage({ colour, size = "card" }) {
-  const resolved = resolveColour(colour);
-  const heightClass = size === "card" ? "" : "";
-  const style =
-    size === "card"
-      ? { height: "110px", width: "100%" }
-      : { height: "32px", width: "32px" };
-
-  if (!resolved) {
+  if (image && !imageFailed) {
     return (
-      <div
-        className="rounded d-flex align-items-center justify-content-center"
-        style={{
-          ...style,
-          backgroundImage:
-            "repeating-linear-gradient(45deg, #f1f5f9, #f1f5f9 10px, #e2e8f0 10px, #e2e8f0 20px)",
-        }}
-      >
-        <Package
-          size={size === "card" ? 28 : 14}
-          strokeWidth={1.75}
-          className="text-secondary"
-        />
-      </div>
+      <img
+        src={image}
+        alt={alt || 'Product'}
+        className={`product-image product-image--${variant}`}
+        onError={() => setImageFailed(true)}
+      />
     );
   }
 
+  const isValid = isValidCssColor(colour);
+
   return (
     <div
-      className={size === "card" ? "rounded-3" : "rounded-2"}
-      style={{ ...style, backgroundColor: resolved }}
-    />
+      className={`product-image product-image--${variant} ${
+        isValid ? '' : 'product-image--placeholder'
+      }`}
+      style={isValid ? { backgroundColor: colour } : undefined}
+      role="img"
+      aria-label={
+        isValid
+          ? `${colour} colour swatch`
+          : 'No colour available'
+      }
+    >
+      {!isValid ? (
+        <Package
+          className="product-image__icon"
+          size={variant === 'card' ? 28 : 14}
+          strokeWidth={1.75}
+          aria-hidden="true"
+        />
+      ) : null}
+    </div>
   );
 }
 

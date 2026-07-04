@@ -1,124 +1,116 @@
-import { NavLink } from "react-router-dom";
-import ThemeToggle from "../common/ThemeToggle";
-import useAuth from "../../../features/auth/hooks/useAuth";
+import { useRef, useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { ShoppingCart, ChevronDown } from 'lucide-react';
+import { useAuthStore } from '@features/auth/store/authStore';
+import { useCartStore } from '@features/cart/store/cartStore';
+import { useOnClickOutside } from '@shared/hooks/useOnClickOutside';
+import { getInitials, classNames } from '@shared/utils/helpers';
+import { ThemeToggle } from '@shared/components/common/ThemeToggle';
+import './Navbar.css';
 
-function Navbar() {
-  const { isAuthenticated, user, role, logout } = useAuth();
+function UserProfileDropdown() {
+  const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useOnClickOutside(menuRef, () => setIsOpen(false));
+
+  const handleLogout = () => {
+    setIsOpen(false);
+    logout();
+    navigate('/login');
+  };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-      <div className="container">
-        {/* Logo */}
-        <NavLink
-          className="navbar-brand fw-bold"
-          to={role === "admin" ? "/admin" : "/"}
-        >
-          Order Inventory
-        </NavLink>
+    <div className="user-menu" ref={menuRef}>
+      <button
+        type="button"
+        className="user-menu__trigger"
+        onClick={() => setIsOpen((prev) => !prev)}
+        aria-haspopup="true"
+        aria-expanded={isOpen}
+        aria-label="Account menu"
+      >
+        <span className="user-menu__avatar">{getInitials(user?.fullName)}</span>
+        <ChevronDown size={16} aria-hidden="true" />
+      </button>
 
-        {/* Mobile Toggle */}
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbar"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+      {isOpen && (
+        <div className="user-menu__dropdown" role="menu">
+          <Link
+            to="/profile"
+            className="user-menu__item"
+            role="menuitem"
+            onClick={() => setIsOpen(false)}
+          >
+            Profile
+          </Link>
+          <Link
+            to="/my-orders"
+            className="user-menu__item"
+            role="menuitem"
+            onClick={() => setIsOpen(false)}
+          >
+            My Orders
+          </Link>
+          <button
+            type="button"
+            className="user-menu__item user-menu__item--danger"
+            role="menuitem"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
-        <div className="collapse navbar-collapse" id="navbar">
-          <ul className="navbar-nav me-auto">
-            <li className="nav-item">
-              <NavLink
-                className="nav-link"
-                to={role === "admin" ? "/admin" : "/"}
-              >
-                Home
-              </NavLink>
-            </li>
+export function Navbar() {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const items = useCartStore((state) => state.items);
+  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/products">
-                Products
-              </NavLink>
-            </li>
+  return (
+    <header className="navbar">
+      <div className="navbar__inner page-container">
+        <Link to="/" className="navbar__logo">
+          OIMS
+        </Link>
 
-            {isAuthenticated && role === "admin" && (
-              <>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/admin/customers">
-                    Customers
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/admin/orders">
-                    Orders
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/admin/inventory">
-                    Inventory
-                  </NavLink>
-                </li>
-              </>
-            )}
-          </ul>
+        <nav className="navbar__nav" aria-label="Primary navigation">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) =>
+              classNames('navbar__link', isActive && 'navbar__link--active')
+            }
+          >
+            Shop
+          </NavLink>
+        </nav>
 
-          <ul className="navbar-nav ms-auto align-items-center gap-2">
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/cart">
-                Cart
-              </NavLink>
-            </li>
+        <div className="navbar__actions">
+          <Link to="/cart" className="navbar__cart" aria-label="View cart">
+            <ShoppingCart size={20} aria-hidden="true" />
+            {itemCount > 0 && <span className="navbar__cart-badge">{itemCount}</span>}
+          </Link>
 
-            {isAuthenticated ? (
-              <>
-                {role === "customer" && (
-                  <li className="nav-item">
-                    <NavLink className="nav-link" to="/orders">
-                      My Orders
-                    </NavLink>
-                  </li>
-                )}
+          <ThemeToggle />
 
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/profile">
-                    {user?.name || user?.full_name || "Profile"}
-                  </NavLink>
-                </li>
-
-                <li className="nav-item">
-                  <button
-                    className="btn btn-outline-light btn-sm ms-2"
-                    onClick={logout}
-                  >
-                    Logout
-                  </button>
-                </li>
-              </>
-            ) : (
-              <>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/login">
-                    Login
-                  </NavLink>
-                </li>
-
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/register">
-                    Register
-                  </NavLink>
-                </li>
-              </>
-            )}
-
-            <li className="nav-item ms-2">
-              <ThemeToggle />
-            </li>
-          </ul>
+          {isAuthenticated ? (
+            <UserProfileDropdown />
+          ) : (
+            <Link to="/login" className="navbar__signin">
+              Sign in
+            </Link>
+          )}
         </div>
       </div>
-    </nav>
+    </header>
   );
 }
 

@@ -1,73 +1,62 @@
 import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 
-const cartStore = (set, get) => ({
-  items: [],
+export const useCartStore = create(
+  persist(
+    (set, get) => ({
+      items: [],
 
-  addItem: (product, quantity = 1) =>
-    set((state) => {
-      const existing = state.items.find(
-        (item) => item.productId === product.id,
-      );
+      addItem: (product, quantity = 1) =>
+        set((state) => {
+          const existing = state.items.find(
+            (item) => item.productId === product.productId,
+          );
+          if (existing) {
+            return {
+              items: state.items.map((item) =>
+                item.productId === product.productId
+                  ? { ...item, quantity: item.quantity + quantity }
+                  : item,
+              ),
+            };
+          }
+          return { items: [...state.items, { ...product, quantity }] };
+        }),
 
-      if (existing) {
-        return {
-          items: state.items.map((item) =>
-            item.productId === product.id
-              ? { ...item, quantity: item.quantity + quantity }
-              : item,
-          ),
-        };
-      }
-
-      return {
-        items: [
-          ...state.items,
-          {
-            productId: product.id,
-            name: product.name,
-            unitPrice: product.unitPrice,
-            colour: product.colour,
-            quantity,
-          },
-        ],
-      };
-    }),
-
-  removeItem: (productId) =>
-    set((state) => ({
-      items: state.items.filter((item) => item.productId !== productId),
-    })),
-
-  updateQuantity: (productId, quantity) =>
-    set((state) => ({
-      items:
-        quantity <= 0
-          ? state.items.filter((item) => item.productId !== productId)
-          : state.items.map((item) =>
+      updateQuantity: (productId, quantity) =>
+        set((state) => {
+          if (quantity <= 0) {
+            return {
+              items: state.items.filter((item) => item.productId !== productId),
+            };
+          }
+          return {
+            items: state.items.map((item) =>
               item.productId === productId ? { ...item, quantity } : item,
             ),
-    })),
+          };
+        }),
 
-  clearCart: () => set({ items: [] }),
+      removeItem: (productId) =>
+        set((state) => ({
+          items: state.items.filter((item) => item.productId !== productId),
+        })),
 
-  getItemCount: () =>
-    get().items.reduce((total, item) => total + item.quantity, 0),
+      clearCart: () => set({ items: [] }),
 
-  getSubtotal: () =>
-    get().items.reduce(
-      (total, item) => total + item.unitPrice * item.quantity,
-      0,
-    ),
-});
+      getSubtotal: () => {
+        return get().items.reduce(
+          (sum, item) => sum + item.unitPrice * item.quantity,
+          0,
+        );
+      },
 
-const useCartStore = create(
-  devtools(
-    persist(cartStore, {
-      name: "cart-storage",
+      getItemCount: () => {
+        return get().items.reduce((count, item) => count + item.quantity, 0);
+      },
     }),
     {
-      name: "CartStore",
+      name: "oims-cart",
     },
   ),
 );

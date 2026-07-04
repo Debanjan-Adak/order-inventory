@@ -1,24 +1,28 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import AuthCard from '../components/AuthCard';
 import LoginForm from '../components/LoginForm';
-import useAuthStore from '../store/authStore';
 
-const Login = () => {
-  const navigate = useNavigate();
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const role = useAuthStore((state) => state.role);
+export function Login() {
+  return (
+    <AuthCard title="Sign in to Order Inventory" subtitle="Enter your credentials to continue.">
+      <LoginForm />
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate(role === 'admin' ? '/admin' : '/', { replace: true });
-    }
-  }, [isAuthenticated, role, navigate]);
-
-  if (isAuthenticated) {
-    return null;
-  }
-
-  return <LoginForm />;
-};
+      <div className="auth-card__links">
+        <p className="auth-card__link-text">
+          Don&rsquo;t have an account?{' '}
+          <Link to="/register" className="auth-card__link">
+            Register
+          </Link>
+        </p>
+        <p className="auth-card__link-text">
+          Admin?{' '}
+          <Link to="/admin/login" className="auth-card__link">
+            Sign in here
+          </Link>
+        </p>
+      </div>
+    </AuthCard>
+  );
+}
 
 export default Login;

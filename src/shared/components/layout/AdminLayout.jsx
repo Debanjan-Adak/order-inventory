@@ -1,24 +1,43 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from 'react-router-dom';
+import Sidebar from './Sidebar';
+import Header from './Header';
+import './AdminLayout.css';
+const TITLE_ROUTES = [
+  { path: '/admin', title: 'Dashboard', exact: true },
+  { path: '/admin/products', title: 'Products' },
+  { path: '/admin/customers', title: 'Customers' },
+  { path: '/admin/orders', title: 'Orders' },
+  { path: '/admin/inventory', title: 'Inventory' },
+  { path: '/admin/stores', title: 'Stores' },
+  { path: '/admin/shipments', title: 'Shipments' },
+];
 
-import Sidebar from "./Sidebar";
-import Header from "./Header";
+function getPageTitle(pathname) {
+  const exactMatch = TITLE_ROUTES.find((route) => route.exact && route.path === pathname);
+  if (exactMatch) return exactMatch.title;
 
-function AdminLayout() {
+  const prefixMatch = TITLE_ROUTES.filter((route) => !route.exact)
+    .sort((a, b) => b.path.length - a.path.length)
+    .find((route) => pathname.startsWith(route.path));
+
+  return prefixMatch ? prefixMatch.title : 'Admin';
+}
+
+export function AdminLayout() {
+  const location = useLocation();
+  const title = getPageTitle(location.pathname);
+
   return (
-    <div className="d-flex">
+    <div className="admin-layout">
       <Sidebar />
 
-{/* Page content */}
+      <div className="admin-layout__main">
+        <Header title={title} />
 
-      <div
-        className="flex-grow-1 d-flex flex-column"
-        style={{
-          minHeight: "100vh",
-        }}
-      >
-        <Header />
-        <main className="flex-grow-1 bg-light p-4">
-          <Outlet />
+        <main className="admin-layout__content">
+          <div key={location.pathname} className="page-container fade-slide-up-enter">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

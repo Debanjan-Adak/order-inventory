@@ -1,24 +1,22 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import AuthCard from '../components/AuthCard';
 import AdminLoginForm from '../components/AdminLoginForm';
-import useAuthStore from '../store/authStore';
 
-const AdminLogin = () => {
-  const navigate = useNavigate();
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const role = useAuthStore((state) => state.role);
+export function AdminLogin() {
+  return (
+    <AuthCard title="Admin sign in" subtitle="Enter your admin credentials to continue.">
+      <AdminLoginForm />
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate(role === 'admin' ? '/admin' : '/', { replace: true });
-    }
-  }, [isAuthenticated, role, navigate]);
-
-  if (isAuthenticated) {
-    return null;
-  }
-
-  return <AdminLoginForm />;
-};
+      <div className="auth-card__links">
+        <p className="auth-card__link-text">
+          Not an admin?{' '}
+          <Link to="/login" className="auth-card__link">
+            Sign in as a customer
+          </Link>
+        </p>
+      </div>
+    </AuthCard>
+  );
+}
 
 export default AdminLogin;

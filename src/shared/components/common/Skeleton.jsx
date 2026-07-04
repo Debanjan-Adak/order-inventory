@@ -1,38 +1,45 @@
-function Skeleton({ height = "20px",width = "100%",className = "",rows}) {
-  if (rows) {
-    return (
-      <div className={`d-flex flex-column gap-3 ${className}`}>
-        {Array.from({ length: rows }).map((_, i) => (
-          <div key={i} className="placeholder-glow">
-            <span
-              className="placeholder col-12"
-              style={{
-                height,
-                width,
-                display: "block",
-                borderRadius: "8px",
-              }}
-            />
-          </div>
-        ))}
-      </div>
-    );
-  }
+import './Skeleton.css';
+
+export function Skeleton({ variant = 'text', width, height, count = 1 }) {
+  const items = Array.from({ length: count }, (_, index) => index);
 
   return (
-    <div className={`placeholder-glow ${className}`}>
-      <span
-        className="placeholder col-12"
-        style={{
-          height,
-
-          width,
-
-          display: "block",
-
-          borderRadius: "8px",
-        }}
-      />
+    <>
+      {items.map((index) => (
+        <span
+          key={index}
+          className={`skeleton skeleton--${variant} skeleton-shimmer`}
+          style={{
+            width: width ?? undefined,
+            height: height ?? undefined,
+          }}
+          aria-hidden="true"
+        />
+      ))}
+    </>
+  );
+}
+export function SkeletonRow({ columns = 4, height = 16 }) {
+  return (
+    <tr className="skeleton-row">
+      {Array.from({ length: columns }, (_, index) => (
+        <td key={index}>
+          <span
+            className="skeleton skeleton--text skeleton-shimmer"
+            style={{ height }}
+            aria-hidden="true"
+          />
+        </td>
+      ))}
+    </tr>
+  );
+}
+export function SkeletonCard({ height = 120 }) {
+  return (
+    <div className="skeleton-card" aria-hidden="true">
+      <span className="skeleton skeleton--rect skeleton-shimmer" style={{ height }} />
+      <span className="skeleton skeleton--text skeleton-shimmer" style={{ width: '70%' }} />
+      <span className="skeleton skeleton--text skeleton-shimmer" style={{ width: '40%' }} />
     </div>
   );
 }
