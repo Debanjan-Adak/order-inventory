@@ -14,8 +14,21 @@ export async function fetchAllAdmins() {
 export async function createCustomer(payload) {
   return customerApi.create(payload);
 }
+
+export async function updateAdminProfile(id, payload) {
+  const { data } = await api.patch(`/admin/${id}`, payload);
+  return data;
+}
+
+export async function updateCustomerProfile(id, payload) {
+  const { data } = await api.patch(endpoints.customers.update(id), payload);
+  return data;
+}
+
 export default {
   lookupCustomerByEmail,
   fetchAllAdmins,
   createCustomer,
+  updateAdminProfile,
+  updateCustomerProfile,
 };

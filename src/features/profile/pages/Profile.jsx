@@ -12,15 +12,17 @@ import './Profile.css';
 
 export function Profile() {
   const user = useAuthStore((state) => state.user);
-  const { data, isLoading, isError, refetch } = useCustomerOrders(user?.id);
+  const isCustomer = user?.role === 'customer';
+  const { data, isLoading, isError, refetch } = useCustomerOrders(isCustomer ? user?.id : null);
   const orders = data?.orders ?? [];
 
   return (
     <div className="profile-page">
       <ProfileCard user={user} />
 
-      <section className="profile-page__orders">
-        <h2 className="profile-page__orders-heading">Order History</h2>
+      {isCustomer && (
+        <section className="profile-page__orders">
+          <h2 className="profile-page__orders-heading">Order History</h2>
 
         {isLoading ? (
           <div className="profile-page__loader">
@@ -47,7 +49,8 @@ export function Profile() {
             ))}
           </ul>
         )}
-      </section>
+        </section>
+      )}
     </div>
   );
 }
