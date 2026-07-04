@@ -1,92 +1,146 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { getCustomerSchema, customerInitialValues } from "../validation/customerSchema";
+import { useFormik } from "formik";
+import { Modal } from "@shared/components/common/Modal";
+import { Loader } from "@shared/components/common/Loader";
+import { customerSchema } from "../validation/customerSchema";
+import { useCustomers } from "../hooks/useCustomers";
+import {
+  useCreateCustomer,
+  useUpdateCustomer,
+} from "../hooks/useCustomerMutations";
 import "./CustomerForm.css";
 
-// initialValues: pass an existing customer to edit, or omit to create.
-// onSubmit(values, formikHelpers) and onCancel() are provided by the page.
-function CustomerForm({ initialValues, onSubmit, onCancel, isSubmitting }) {
-  const isEdit = Boolean(initialValues);
+export function CustomerForm({ isOpen, onClose, customer }) {
+  const isEditMode = Boolean(customer);
+  const { data: customers } = useCustomers();
+  const createCustomer = useCreateCustomer();
+  const updateCustomer = useUpdateCustomer();
+  const isPending = createCustomer.isPending || updateCustomer.isPending;
 
-  const startingValues = isEdit
-    ? {
-        full_name: initialValues.full_name,
-        email_address: initialValues.email_address,
-        password: "",
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      full_name: customer?.full_name ?? "",
+      email_address: customer?.email_address ?? "",
+    },
+    validationSchema: customerSchema,
+    onSubmit: async (values, { setFieldError, resetForm }) => {
+      const trimmedName = values.full_name.trim();
+      const trimmedEmail = values.email_address.trim();
+
+      if (!isEditMode) {
+        const isDuplicate = (customers ?? []).some(
+          (existing) =>
+            existing.email_address.toLowerCase() === trimmedEmail.toLowerCase(),
+        );
+        if (isDuplicate) {
+          setFieldError(
+            "email_address",
+            "A customer with this email already exists.",
+          );
+          return;
+        }
       }
-    : customerInitialValues;
+
+      try {
+        if (isEditMode) {
+          await updateCustomer.mutateAsync({
+            id: customer.id,
+            full_name: trimmedName,
+            email_address: trimmedEmail,
+          });
+        } else {
+          await createCustomer.mutateAsync({
+            full_name: trimmedName,
+            email_address: trimmedEmail,
+            isblocked: false,
+          });
+        }
+        resetForm();
+        onClose();
+      } catch {}
+    },
+  });
+
+  function handleClose() {
+    formik.resetForm();
+    onClose();
+  }
+
+  const footer = (
+    <div className="customer-form__actions">
+      <button
+        type="button"
+        className="btn btn-outline-secondary"
+        onClick={handleClose}
+        disabled={isPending}
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        form="customer-form"
+        className="btn btn-primary"
+        disabled={isPending}
+      >
+        {isPending ? <Loader size="sm" /> : null}
+        {isEditMode ? "Save Changes" : "Add Customer"}
+      </button>
+    </div>
+  );
 
   return (
-    <Formik
-      initialValues={startingValues}
-      validationSchema={getCustomerSchema(isEdit)}
-      onSubmit={onSubmit}
-      enableReinitialize
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      title={isEditMode ? "Edit Customer" : "Add Customer"}
+      size="sm"
+      footer={footer}
     >
-      {({ isValid, dirty }) => (
-        <Form className="customer-form" noValidate>
-          <div className="mb-3">
-            <label htmlFor="full_name" className="form-label">
-              Full name
-            </label>
-            <Field
-              id="full_name"
-              name="full_name"
-              type="text"
-              className="form-control"
-              placeholder="e.g. Tammy Bryant"
-            />
-            <ErrorMessage name="full_name" component="div" className="invalid-feedback-text" />
-          </div>
+      <form
+        id="customer-form"
+        className="customer-form"
+        onSubmit={formik.handleSubmit}
+        noValidate
+      >
+        <div className="customer-form__field">
+          <label htmlFor="full_name" className="customer-form__label">
+            Full Name
+          </label>
+          <input
+            id="full_name"
+            name="full_name"
+            type="text"
+            className="form-control"
+            value={formik.values.full_name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.full_name && formik.errors.full_name ? (
+            <p className="customer-form__error">{formik.errors.full_name}</p>
+          ) : null}
+        </div>
 
-          <div className="mb-3">
-            <label htmlFor="email_address" className="form-label">
-              Email
-            </label>
-            <Field
-              id="email_address"
-              name="email_address"
-              type="email"
-              className="form-control"
-              placeholder="name@example.com"
-            />
-            <ErrorMessage
-              name="email_address"
-              component="div"
-              className="invalid-feedback-text"
-            />
-          </div>
-
-          <div className="mb-1">
-            <label htmlFor="password" className="form-label">
-              {isEdit ? "PIN (leave blank to keep current)" : "PIN"}
-            </label>
-            <Field
-              id="password"
-              name="password"
-              type="text"
-              inputMode="numeric"
-              maxLength={4}
-              className="form-control customer-form-pin"
-              placeholder="4-digit PIN"
-            />
-            <ErrorMessage name="password" component="div" className="invalid-feedback-text" />
-          </div>
-
-          <div className="customer-form-actions">
-            <button type="button" className="btn btn-outline-secondary" onClick={onCancel}>
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={!isValid || !dirty || isSubmitting}
-            >
-              {isSubmitting ? "Saving..." : isEdit ? "Save changes" : "Add customer"}
-            </button>
-          </div>
-        </Form>
-      )}
-    </Formik>
+        <div className="customer-form__field">
+          <label htmlFor="email_address" className="customer-form__label">
+            Email Address
+          </label>
+          <input
+            id="email_address"
+            name="email_address"
+            type="email"
+            className="form-control"
+            value={formik.values.email_address}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.email_address && formik.errors.email_address ? (
+            <p className="customer-form__error">
+              {formik.errors.email_address}
+            </p>
+          ) : null}
+        </div>
+      </form>
+    </Modal>
   );
 }
 

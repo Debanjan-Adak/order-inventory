@@ -907,7 +907,7 @@
       "brand": "Biba",
       "size": "XL",
       "rating": 4,
-      "image" : "https://images.jdmagicbox.com/quickquotes/images_main/biba-ethnic-wear-27-05-2021-1249-227039077-1yedj.jpg"
+      "image": "https://images.jdmagicbox.com/quickquotes/images_main/biba-ethnic-wear-27-05-2021-1249-227039077-1yedj.jpg"
     },
     {
       "id": 14,
@@ -929,7 +929,7 @@
       "brand": "Allen Solly",
       "size": "M",
       "rating": 5,
-      "image":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkpetcYn0JphpMWSKeYws6Ui32uxzuNTwaOU9VlWhFhMui_O90OANNvFA&s=10"
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkpetcYn0JphpMWSKeYws6Ui32uxzuNTwaOU9VlWhFhMui_O90OANNvFA&s=10"
     },
     {
       "id": 16,
@@ -995,7 +995,7 @@
       "brand": "Allen Solly",
       "size": "XXL",
       "rating": 3,
-      "image" : "https://rukminim2.flixcart.com/image/480/640/xif0q/jean/w/y/r/38-jeanlscargo-03-olivegrn-urbano-fashion-original-imahkrkh5hrrkzh3.jpeg?q=90"
+      "image": "https://rukminim2.flixcart.com/image/480/640/xif0q/jean/w/y/r/38-jeanlscargo-03-olivegrn-urbano-fashion-original-imahkrkh5hrrkzh3.jpeg?q=90"
     },
     {
       "id": 22,
@@ -1116,8 +1116,7 @@
       "brand": "Zara",
       "size": "M",
       "rating": 3,
-      "image":"https://static.zara.net/assets/public/8333/bee0/f494468c8351/a2ef7e1115fa/02531225250-p/02531225250-p.jpg?ts=1774015561167&w=792&f=auto"
-
+      "image": "https://static.zara.net/assets/public/8333/bee0/f494468c8351/a2ef7e1115fa/02531225250-p/02531225250-p.jpg?ts=1774015561167&w=792&f=auto"
     },
     {
       "id": 33,
@@ -1150,7 +1149,7 @@
       "brand": "Allen Solly",
       "size": "XL",
       "rating": 3,
-      "image":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvixgY3sB_pYk41FhWeCBTWMv981aAm8CSYXQy_uc90TtDsGft8NLjJPs&s=10"
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvixgY3sB_pYk41FhWeCBTWMv981aAm8CSYXQy_uc90TtDsGft8NLjJPs&s=10"
     },
     {
       "id": 36,
@@ -1215,7 +1214,8 @@
       "colour": "VOILET",
       "brand": "H & M",
       "size": "XL",
-      "rating": 4
+      "rating": 4,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEoJe3KRUd9p6JGSsxk6lUJIHfjtf9P-3YiwdEcqkibQ&s"
     },
     {
       "id": 42,
@@ -1225,7 +1225,8 @@
       "colour": "YELLOW",
       "brand": "The Label - Ritu Kumar",
       "size": "M",
-      "rating": 3
+      "rating": 3,
+      "image": "https://content.jdmagicbox.com/quickquotes/images_main/label-ritu-kumar-tops-05-07-2021-003-237558304-7ekfb.jpg?impolicy=queryparam&im=Resize=(360,360),aspect=fit"
     },
     {
       "id": 43,
@@ -1235,7 +1236,8 @@
       "colour": "WHITE",
       "brand": "Global Desi",
       "size": "M",
-      "rating": 3
+      "rating": 3,
+      "image": "https://m.media-amazon.com/images/I/41wKpqDgZ1S._AC_UY1100_.jpg"
     },
     {
       "id": 44,
@@ -1245,7 +1247,8 @@
       "colour": "BLACK",
       "brand": "H & M",
       "size": "XL",
-      "rating": 4
+      "rating": 4,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmsAAYnIVKiDjd8dMvrydIa0CpwU5mXSKgO0krIebI0A&s=10"
     },
     {
       "id": 45,
@@ -1255,7 +1258,8 @@
       "colour": "BROWN",
       "brand": "Global Desi",
       "size": "XL",
-      "rating": 3
+      "rating": 3,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdWbreOY1GZYOwUDkBYWr86HJPwGT3AaVh6mYbmwzJaA&s"
     },
     {
       "id": 46,
@@ -1265,7 +1269,8 @@
       "colour": "GREEN",
       "brand": "H & M",
       "size": "XL",
-      "rating": 4
+      "rating": 4,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7lAqksthiQ5mCIp1mrHlX9vqwPuo6PZkg2lgzSuQy8g&s=10"
     },
     {
       "id": 47,
@@ -1275,17 +1280,19 @@
       "colour": "BROWN",
       "brand": "H & M",
       "size": "M",
-      "rating": 4
+      "rating": 4,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYFFrb2eHZe6Lpd_bY7QI_lFi4lOvqfO6K8-1TDciG_g&s"
     },
     {
       "id": 48,
       "product_id": 48,
-      "product_name": "Sweaters,",
+      "product_name": "Kurta",
       "unit_price": 8042.0,
       "colour": "PINK",
       "brand": "Manyavar",
       "size": "S",
-      "rating": 4
+      "rating": 4,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVafeQSgwhWtHml2qq8ipQ9t5awEvYnaCYxl8gTr5qVg&s=10"
     },
     {
       "id": 49,

@@ -1,147 +1,130 @@
-.customer-details-page {
-  padding: 24px 32px;
-  max-width: 1100px;
-  margin: 0 auto;
+.customer-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
-.customer-details-loading {
-  padding: 48px;
-  text-align: center;
-  color: var(--text-muted, #64748b);
+.customer-details__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
 }
 
-.customer-details-back {
-  padding-left: 0;
-  color: var(--text-secondary, #334155);
+.customer-details__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  width: fit-content;
+  font-size: var(--font-size-body-strong);
+  font-weight: var(--font-weight-body-strong);
+  color: var(--color-text-secondary);
   text-decoration: none;
-  font-size: 0.875rem;
-  margin-bottom: 16px;
 }
 
-.customer-details-back:hover {
-  color: var(--brand-accent, #4f46e5);
+.customer-details__back:hover {
+  color: var(--color-brand-accent);
 }
 
-.customer-details-grid {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 20px;
-  align-items: start;
+.customer-details__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-surface-card);
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  border-radius: var(--radius-lg);
 }
 
-.customer-profile-card,
-.customer-orders-card {
-  background-color: var(--surface-card, #fff);
-  border: 1px solid var(--border-default, #e2e8f0);
-  border-radius: 12px;
-  padding: 24px;
-}
-
-.customer-profile-card {
-  text-align: center;
-}
-
-.customer-profile-avatar {
+.customer-details__avatar {
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 64px;
   height: 64px;
-  border-radius: 50%;
-  background-color: var(--brand-accent-soft, #eef2ff);
-  color: var(--brand-accent, #4f46e5);
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 12px;
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--color-brand-accent) 15%, transparent);
+  color: var(--color-brand-accent);
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-display);
 }
 
-.customer-profile-name {
-  font-size: 1.05rem;
-  font-weight: 600;
-  margin: 0 0 4px;
-  color: var(--text-primary, #0f172a);
+.customer-details__identity {
+  flex: 1;
+  min-width: 0;
 }
 
-.customer-profile-email {
+.customer-details__name {
+  margin: 0;
+  font-size: var(--font-size-heading);
+  font-weight: var(--font-weight-heading);
+  color: var(--color-text-primary);
+}
+
+.customer-details__email {
+  margin: 0;
+  font-size: var(--font-size-body);
+  color: var(--color-text-muted);
+}
+
+.customer-details__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-surface-card);
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  border-radius: var(--radius-lg);
+}
+
+.customer-details__section-title {
+  margin: 0;
+  font-size: var(--font-size-heading);
+  font-weight: var(--font-weight-heading);
+  color: var(--color-text-primary);
+}
+
+.customer-details__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.customer-details__list-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 0.8rem;
-  color: var(--text-muted, #64748b);
-  margin: 0 0 12px;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-border-default);
+  font-size: var(--font-size-body);
 }
 
-.customer-orders-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-primary, #0f172a);
-  margin: 0 0 16px;
+.customer-details__list-row:last-child {
+  border-bottom: none;
 }
 
-.customer-orders-table th {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  color: var(--text-muted, #64748b);
-  border-bottom: 1px solid var(--border-default, #e2e8f0);
-  padding: 8px 12px;
+.customer-details__list-primary {
+  flex: 1;
+  min-width: 0;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-body-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.customer-orders-table td {
-  padding: 10px 12px;
-  font-size: 0.875rem;
-  border-bottom: 1px solid var(--border-default, #e2e8f0);
+.customer-details__list-secondary {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-caption);
 }
 
-.customer-orders-row {
-  cursor: pointer;
-  transition: background-color 100ms ease-out;
-}
-
-.customer-orders-row:hover {
-  background-color: var(--surface-base, #f8fafc);
-}
-
-.order-status-pill {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 500;
-}
-
-.order-status-pill.status-pending {
-  background-color: var(--status-pending-bg, #fef3c7);
-  color: #92400e;
-}
-
-.order-status-pill.status-processing {
-  background-color: var(--status-processing-bg, #dbeafe);
-  color: #1d4ed8;
-}
-
-.order-status-pill.status-shipped {
-  background-color: var(--status-shipped-bg, #ede9fe);
-  color: #6d28d9;
-}
-
-.order-status-pill.status-delivered {
-  background-color: var(--status-delivered-bg, #dcfce7);
-  color: #15803d;
-}
-
-.order-status-pill.status-cancelled {
-  background-color: var(--status-cancelled-bg, #fee2e2);
-  color: #b91c1c;
-}
-
-@media (max-width: 768px) {
-  .customer-details-page {
-    padding: 16px;
-  }
-
-  .customer-details-grid {
-    grid-template-columns: 1fr;
-  }
+.customer-details__empty {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-body);
 }
