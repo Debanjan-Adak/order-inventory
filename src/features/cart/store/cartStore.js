@@ -56,7 +56,7 @@ export const useCartStore = create(
       },
     }),
     {
-      name: "oims-cart",
+      name: 'smartbuy-cart',
     },
   ),
 );

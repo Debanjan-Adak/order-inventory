@@ -21,7 +21,7 @@ export const useThemeStore = create(
       setTheme: (theme) => set({ theme }),
     }),
     {
-      name: 'oims-theme',
+      name: 'smartbuy-theme',
     }
   )
 );

@@ -15,7 +15,7 @@ export const useAuthStore = create(
       logout: () => set({ ...INITIAL_STATE }),
     }),
     {
-      name: 'oims-auth',
+      name: 'smartbuy-auth',
     }
   )
 );

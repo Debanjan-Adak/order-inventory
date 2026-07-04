@@ -7,7 +7,7 @@ export function PublicLayout() {
     <div className="public-layout">
       <header className="public-layout__header">
         <Link to="/" className="public-layout__logo">
-          OIMS
+          SmartBuy
         </Link>
       </header>
 
