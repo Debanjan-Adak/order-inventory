@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Star, Pencil, Trash2 } from 'lucide-react';
 import formatCurrency from '@shared/utils/formatCurrency';
 import { useCartStore } from '@features/cart/store/cartStore';
+import { useAuthStore } from '@features/auth/store/authStore';
 import { useToastStore } from '@stores/toastStore';
 import { ProductImage } from './ProductImage';
 import './ProductCard.css';
@@ -12,10 +13,7 @@ function StarRating({ rating }) {
   const hasHalfStar = numericRating - fullStars >= 0.5;
 
   return (
-    <div
-      className="product-card__rating"
-      aria-label={`Rated ${numericRating} out of 5`}
-    >
+    <div className="product-card__rating" aria-label={`Rated ${numericRating} out of 5`}>
       {Array.from({ length: 5 }, (_, index) => {
         const starNumber = index + 1;
 
@@ -32,15 +30,8 @@ function StarRating({ rating }) {
 
         if (starNumber === fullStars + 1 && hasHalfStar) {
           return (
-            <span
-              key={index}
-              className="product-card__star-half-wrapper"
-            >
-              <Star
-                size={14}
-                strokeWidth={2}
-                className="product-card__star"
-              />
+            <span key={index} className="product-card__star-half-wrapper">
+              <Star size={14} strokeWidth={2} className="product-card__star" />
               <span className="product-card__star-half-overlay">
                 <Star
                   size={14}
@@ -75,6 +66,7 @@ export function ProductCard({
   const navigate = useNavigate();
   const addItem = useCartStore((state) => state.addItem);
   const addToast = useToastStore((state) => state.addToast);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   function goToDetails() {
     navigate(`/products/${product.id}`);
@@ -82,6 +74,15 @@ export function ProductCard({
 
   function handleAddToCart(event) {
     event.stopPropagation();
+
+    if (!isAuthenticated) {
+      addToast({
+        type: 'error',
+        message: 'Please log in to add items to your cart.',
+      });
+      navigate('/login');
+      return;
+    }
 
     if (onAddToCart) {
       onAddToCart();
@@ -148,10 +149,7 @@ export function ProductCard({
         onKeyDown={
           mode === 'customer'
             ? (event) => {
-                if (
-                  event.key === 'Enter' ||
-                  event.key === ' '
-                ) {
+                if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault();
                   goToDetails();
                 }
@@ -167,9 +165,7 @@ export function ProductCard({
         />
 
         <div className="product-card__body">
-          <p className="product-card__name">
-            {product.product_name}
-          </p>
+          <p className="product-card__name">{product.product_name}</p>
 
           <span className="product-card__brand-badge">
             {product.brand}
