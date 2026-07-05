@@ -1,6 +1,14 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../store/authStore';
-import { lookupCustomerByEmail, fetchAllAdmins, createCustomer } from '../api/authApi';
+import { useCartStore } from '@features/cart/store/cartStore';
+import { useToastStore } from '@stores/toastStore';
+import {
+  lookupCustomerByEmail,
+  fetchAllAdmins,
+  createCustomer,
+  updateAdminProfile,
+  updateCustomerProfile,
+} from '../api/authApi';
 
 function findByEmail(records, email, field) {
   const target = String(email).trim().toLowerCase();
@@ -72,6 +80,7 @@ export function useRegister() {
         isblocked: false,
       });
 
+      useCartStore.getState().clearCart();
       useAuthStore.getState().login({
         id: created.id,
         role: 'customer',
@@ -84,4 +93,28 @@ export function useRegister() {
   });
 }
 
-export default { useLogin, useAdminLogin, useRegister };
+export function useUpdateProfile() {
+  const queryClient = useQueryClient();
+  const addToast = useToastStore((state) => state.addToast);
+
+  return useMutation({
+    mutationFn: async ({ role, id, fullName, email }) => {
+      if (role === 'admin') {
+        return updateAdminProfile(id, { name: fullName, email });
+      } else {
+        return updateCustomerProfile(id, { full_name: fullName, email_address: email });
+      }
+    },
+    onSuccess: (data, variables) => {
+      if (variables.role === 'customer') {
+        queryClient.invalidateQueries({ queryKey: ['customers'] });
+      }
+      addToast({ type: 'success', message: 'Profile updated successfully.' });
+    },
+    onError: () => {
+      addToast({ type: 'error', message: "Couldn't update profile. Please try again." });
+    },
+  });
+}
+
+export default { useLogin, useAdminLogin, useRegister, useUpdateProfile };

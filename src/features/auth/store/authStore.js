@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useCartStore } from '@features/cart/store/cartStore';
 
 const INITIAL_STATE = {
   user: null,
@@ -12,7 +13,10 @@ export const useAuthStore = create(
       ...INITIAL_STATE,
 
       login: (user) => set({ user, isAuthenticated: true }),
-      logout: () => set({ ...INITIAL_STATE }),
+      logout: () => {
+        useCartStore.getState().clearCart();
+        return set({ ...INITIAL_STATE });
+      },
     }),
     {
       name: 'smartbuy-auth',

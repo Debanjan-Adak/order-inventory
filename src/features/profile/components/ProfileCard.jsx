@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Pencil, X } from 'lucide-react';
 import { useAuthStore } from '@features/auth/store/authStore';
-import { useUpdateCustomer } from '@features/customers/hooks/useCustomerMutations';
+import { useUpdateProfile } from '@features/auth/hooks/useAuth';
 import { Loader } from '@shared/components/common/Loader';
 import { getInitials } from '@shared/utils/helpers';
 import './ProfileCard.css';
@@ -20,14 +20,10 @@ const profileSchema = Yup.object({
     ),
 });
 
-/**
- * @param {object} props
- * @param {{id: number, role: string, email: string, fullName: string}} props.user
- */
 export function ProfileCard({ user }) {
   const [isEditing, setIsEditing] = useState(false);
   const login = useAuthStore((state) => state.login);
-  const updateCustomer = useUpdateCustomer();
+  const updateProfile = useUpdateProfile();
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -41,15 +37,16 @@ export function ProfileCard({ user }) {
       const email = values.email.trim();
 
       try {
-        await updateCustomer.mutateAsync({
-          id: user.id,
-          full_name: fullName,
-          email_address: email,
+        await updateProfile.mutateAsync({
+          role: user?.role,
+          id: user?.id,
+          fullName,
+          email,
         });
         login({ ...user, fullName, email });
         setIsEditing(false);
       } catch {
-        
+
       }
     },
   });
@@ -104,7 +101,7 @@ export function ProfileCard({ user }) {
               type="button"
               className="btn btn-outline-secondary"
               onClick={handleCancel}
-              disabled={updateCustomer.isPending}
+              disabled={updateProfile.isPending}
             >
               <X size={16} strokeWidth={1.75} />
               Cancel
@@ -112,9 +109,9 @@ export function ProfileCard({ user }) {
             <button
               type="submit"
               className="btn btn-primary"
-              disabled={updateCustomer.isPending}
+              disabled={updateProfile.isPending}
             >
-              {updateCustomer.isPending ? <Loader size="sm" /> : null}
+              {updateProfile.isPending ? <Loader size="sm" /> : null}
               Save Changes
             </button>
           </div>
@@ -141,5 +138,4 @@ export function ProfileCard({ user }) {
     </div>
   );
 }
-
 export default ProfileCard;
